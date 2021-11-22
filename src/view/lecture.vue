@@ -88,7 +88,7 @@
     <!--添加或修改授课信息-->
     <el-dialog :title="pageInfo.title" :visible.sync="lectureFormVisible">
       <el-form :model="lectureForm" :rules="lectureRules" :ref="lectureForm">
-        <el-form-item label="课程名称" :label-width="formLabelWidth">
+        <el-form-item label="课程名称" prop="courseName" :label-width="formLabelWidth">
           <el-select
             v-model="lectureForm.courseName"
             clearable
@@ -103,7 +103,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="授课老师" :label-width="formLabelWidth">
+        <el-form-item label="授课老师" prop="teacherName" :label-width="formLabelWidth">
           <el-select
             v-model="lectureForm.teacherName"
             clearable
@@ -161,6 +161,8 @@ export default {
       search: {
         teacherName: "",
         grade: "",
+        offset:"",
+        limit:""
       },
       courseList: [],
       teacherList: [],
@@ -193,10 +195,10 @@ export default {
 
     //搜索
     searchData() {
+      this.search.offset = this.pageInfo.currentPage;
+      this.search.limit =  this.pageInfo.pageSize;
       req("selectData", {
         ...this.search,
-        pageSize: this.pageInfo.pageSize,
-        currentPage: this.pageInfo.currentPage,
       }).then((data) => {
         console.log(data.data);
         this.tableData = data.data.list;

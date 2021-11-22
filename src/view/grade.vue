@@ -81,13 +81,13 @@
     <!--添加或修改班级信息-->
     <el-dialog :title="pageInfo.title" :visible.sync="gradeFormVisible">
       <el-form :model="gradeForm" :rules="gradeRules" :ref="gradeForm">
-        <el-form-item label="班级名称" :label-width="formLabelWidth">
+        <el-form-item label="班级名称" prop="gradeName" :label-width="formLabelWidth">
           <el-input v-model="gradeForm.gradeName" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="班级人数" :label-width="formLabelWidth">
+        <el-form-item label="班级人数" prop="gradeNum" :label-width="formLabelWidth">
           <el-input v-model="gradeForm.gradeNum" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="班主任" :label-width="formLabelWidth">
+        <el-form-item label="班主任" prop="headmaster" :label-width="formLabelWidth">
           <el-select
             v-model="gradeForm.headmaster"
             clearable
@@ -150,6 +150,8 @@ export default {
       //搜索，按钮
       search: {
         headmasterName: "",
+        offset:"",
+        limit:""
       },
     };
   },
@@ -178,10 +180,10 @@ export default {
     },
 
     searchData() {
+      this.search.offset = this.pageInfo.currentPage;
+      this.search.limit = this.pageInfo.pageSize;
       req("selectData", {
         ...this.search,
-        pageSize: this.pageInfo.pageSize,
-        currentPage: this.pageInfo.currentPage,
       }).then((data) => {
         console.log(data.data);
         this.tableData = data.data.list;

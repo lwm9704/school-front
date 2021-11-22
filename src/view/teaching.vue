@@ -89,7 +89,7 @@
     <!--添加或修改教学信息-->
     <el-dialog :title="dialogInfo.title" :visible.sync="teachingFormVisible">
       <el-form :model="teachingForm" :ref="teachingForm" :rules="teachingRules">
-        <el-form-item label="班级名称" :label-width="formLabelWidth">
+        <el-form-item label="班级名称" prop="classesName" :label-width="formLabelWidth">
           <el-select
             v-model="teachingForm.classesName"
             clearable
@@ -104,7 +104,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="课程名称" :label-width="formLabelWidth">
+        <el-form-item label="课程名称" prop="courseName" :label-width="formLabelWidth">
           <el-select
             v-model="teachingForm.courseName"
             clearable
@@ -119,7 +119,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="老师名称" :label-width="formLabelWidth">
+        <el-form-item label="老师名称" prop="teacherName" :label-width="formLabelWidth">
           <el-select
             v-model="teachingForm.teacherName"
             clearable
@@ -134,11 +134,11 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="年份" :label-width="formLabelWidth">
+        <el-form-item label="年份" prop="year" :label-width="formLabelWidth">
           <el-input v-model="teachingForm.year" autocomplete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="学期" :label-width="formLabelWidth">
+        <el-form-item label="学期" prop="semester" :label-width="formLabelWidth">
           <el-select
             v-model="teachingForm.semester"
             clearable
@@ -153,7 +153,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="状态" :label-width="formLabelWidth">
+        <el-form-item label="状态" prop="state" :label-width="formLabelWidth">
           <el-select
             v-model="teachingForm.state"
             clearable
@@ -168,7 +168,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="备注" :label-width="formLabelWidth">
+        <el-form-item label="备注" prop="mark" :label-width="formLabelWidth">
           <el-input v-model="teachingForm.mark" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
@@ -226,6 +226,8 @@ export default {
       search: {
         courseName: "",
         grade: "",
+        offset:"",
+        limit:""
       },
       gradeList: [],
       classesList: [],
@@ -278,10 +280,10 @@ export default {
 
     //搜索
     searchData() {
+      this.search.offset = this.pageInfo.currentPage;
+      this.search.limit = this.pageInfo.pageSize;
       req("selectData", {
         ...this.search,
-        pageSize: this.pageInfo.pageSize,
-        currentPage: this.pageInfo.currentPage,
       }).then((data) => {
         console.log(data.data);
         this.tableData = data.data.list;

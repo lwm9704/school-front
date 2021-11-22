@@ -106,7 +106,7 @@
     <!--添加或修改成绩信息-->
     <el-dialog :title="dialogInfo.title" :visible.sync="scoreFormVisible">
       <el-form :model="scoreForm" :rules="scoreRules" :ref="scoreForm">
-        <el-form-item label="课程名称" :label-width="formLabelWidth">
+        <el-form-item label="课程名称" prop="courseName" :label-width="formLabelWidth">
           <el-select
             v-model="scoreForm.courseName"
             clearable
@@ -121,7 +121,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="班级" :label-width="formLabelWidth">
+        <el-form-item label="班级" prop="grade" :label-width="formLabelWidth">
           <el-select v-model="scoreForm.grade" clearable placeholder="请选择">
             <el-option
               v-for="item in gradeList"
@@ -132,7 +132,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="学生" :label-width="formLabelWidth">
+        <el-form-item label="学生" prop="studentName" :label-width="formLabelWidth">
           <el-select
             v-model="scoreForm.studentName"
             clearable
@@ -147,11 +147,11 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="年份" :label-width="formLabelWidth">
+        <el-form-item label="年份" prop="year" :label-width="formLabelWidth">
           <el-input v-model="scoreForm.year" autocomplete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="学期" :label-width="formLabelWidth">
+        <el-form-item label="学期" prop="semester" :label-width="formLabelWidth">
           <el-select
             v-model="scoreForm.semester"
             clearable
@@ -166,11 +166,11 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="成绩" :label-width="formLabelWidth">
+        <el-form-item label="成绩" prop="score" :label-width="formLabelWidth">
           <el-input v-model="scoreForm.score" autocomplete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="状态" :label-width="formLabelWidth">
+        <el-form-item label="状态" prop="state" :label-width="formLabelWidth">
           <el-select v-model="scoreForm.state" clearable placeholder="请选择">
             <el-option
               v-for="item in stateList"
@@ -181,7 +181,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="备注" :label-width="formLabelWidth">
+        <el-form-item label="备注" prop="mark" :label-width="formLabelWidth">
           <el-input v-model="scoreForm.mark" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
@@ -244,6 +244,8 @@ export default {
         studentName: "",
         studentNo: "",
         grade: "",
+        offset:"",
+        limit:""
       },
       gradeList: [],
       studentList: [],
@@ -313,10 +315,10 @@ export default {
     },
     //搜索
     searchData() {
+      this.search.offset = this.pageInfo.currentPage;
+      this.search.limit = this.pageInfo.pageSize;
       req("selectData", {
         ...this.search,
-        pageSize: this.pageInfo.pageSize,
-        currentPage: this.pageInfo.currentPage,
       }).then((data) => {
         console.log(data.data);
         this.tableData = data.data.list;

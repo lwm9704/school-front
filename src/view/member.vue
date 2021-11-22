@@ -117,7 +117,7 @@
     <!--添加或修改成员信息-->
     <el-dialog :title="dialogInfo.title" :visible.sync="memberFormVisible">
       <el-form :model="memberForm" :rules="memberRules" :ref="memberForm">
-        <el-form-item label="班级名称" :label-width="formLabelWidth">
+        <el-form-item label="班级名称" prop="grade" :label-width="formLabelWidth">
           <el-select v-model="memberForm.grade" placeholder="班级名称">
             <el-option
               v-for="item in gradeList"
@@ -127,7 +127,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="学生名称" :label-width="formLabelWidth">
+        <el-form-item label="学生名称" prop="studentName" :label-width="formLabelWidth">
           <el-select v-model="memberForm.studentName" placeholder="学生名称">
             <el-option
               v-for="item in studentList"
@@ -137,7 +137,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="成员类型" :label-width="formLabelWidth">
+        <el-form-item label="成员类型" prop="type" :label-width="formLabelWidth">
           <el-select v-model="memberForm.type" clearable placeholder="请选择">
             <el-option
               v-for="item in typeList"
@@ -147,13 +147,13 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="姓名" :label-width="formLabelWidth">
+        <el-form-item label="姓名" prop="memberName" :label-width="formLabelWidth">
           <el-input
             v-model="memberForm.memberName"
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="性别" :label-width="formLabelWidth">
+        <el-form-item label="性别" prop="sex" :label-width="formLabelWidth">
           <el-select v-model="memberForm.sex" placeholder="性别">
             <el-option
               v-for="item in sex"
@@ -163,13 +163,13 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="手机号码" :label-width="formLabelWidth">
+        <el-form-item label="手机号码" prop="phone" :label-width="formLabelWidth">
           <el-input v-model="memberForm.phone" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="电子邮箱" :label-width="formLabelWidth">
+        <el-form-item label="电子邮箱" prop="email" :label-width="formLabelWidth">
           <el-input v-model="memberForm.email" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="出生日期" :label-width="formLabelWidth">
+        <el-form-item label="出生日期" prop="birthday" :label-width="formLabelWidth">
           <div class="block">
             <el-date-picker
               v-model="memberForm.birthday"
@@ -178,10 +178,10 @@
             ></el-date-picker>
           </div>
         </el-form-item>
-        <el-form-item label="身份证号码" :label-width="formLabelWidth">
+        <el-form-item label="身份证号码" prop="idCar" :label-width="formLabelWidth">
           <el-input v-model="memberForm.idCar" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="状态" :label-width="formLabelWidth">
+        <el-form-item label="状态" prop="state" :label-width="formLabelWidth">
           <el-select v-model="memberForm.state" placeholder="状态">
             <el-option
               v-for="item in state"
@@ -191,7 +191,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="备注" :label-width="formLabelWidth">
+        <el-form-item label="备注" prop="mark" :label-width="formLabelWidth">
           <el-input v-model="memberForm.mark" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
@@ -270,6 +270,8 @@ export default {
       search: {
         studentName: "",
         grade: "",
+        offset:"",
+        limit:""
       },
 
       //新增修改信息所需数据
@@ -332,10 +334,10 @@ export default {
 
     //搜索
     searchData() {
+      this.search.offset  = this.pageInfo.currentPage;
+      this.search.limit = this.pageInfo.pageSize;
       req("selectData", {
         ...this.search,
-        pageSize: this.pageInfo.pageSize,
-        currentPage: this.pageInfo.currentPage,
       }).then((data) => {
         console.log(data.data);
         this.tableData = data.data.list;

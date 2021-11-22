@@ -94,7 +94,7 @@
     <el-dialog :title="dialogInfo.title" :visible.sync="courseFormVisible">
       <el-form :model="courseForm" :rules="courseRules" :ref="courseForm">
         <el-col :span="12">
-          <el-form-item label="课程编号" :label-width="formLabelWidth">
+          <el-form-item label="课程编号" prop="courseNo" :label-width="formLabelWidth">
             <el-input
               v-model="courseForm.courseNo"
               clearable
@@ -103,7 +103,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="课程名称" :label-width="formLabelWidth">
+          <el-form-item label="课程名称" prop="courseName" :label-width="formLabelWidth">
             <el-input
               v-model="courseForm.courseName"
               clearable
@@ -112,7 +112,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="状态" :label-width="formLabelWidth">
+          <el-form-item label="状态" prop="state" :label-width="formLabelWidth">
             <el-select v-model="courseForm.state" placeholder="请选择">
               <el-option label="下线" value="0"></el-option>
               <el-option label="发布" value="1"></el-option>
@@ -120,7 +120,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item label="备注" :label-width="formLabelWidth">
+          <el-form-item label="备注" prop="mark" :label-width="formLabelWidth">
             <el-input
               v-model="courseForm.mark"
               autocomplete="off"
@@ -175,6 +175,8 @@ export default {
       search: {
         courseName: "",
         state: "",
+        offset:"",
+        limit:""
       },
       state: [
         {
@@ -214,10 +216,10 @@ export default {
 
     //搜索
     searchData() {
+      this.search.offset = this.pageInfo.currentPage;
+      this.search.limit = this.pageInfo.pageSize;
       req("selectData", {
         ...this.search,
-        pageSize: this.pageInfo.pageSize,
-        currentPage: this.pageInfo.currentPage,
       }).then((data) => {
         console.log(data.data);
         this.tableData = data.data.list;
