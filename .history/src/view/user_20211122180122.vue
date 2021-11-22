@@ -362,8 +362,6 @@ export default {
       search: {
         name: "",
         role: "",
-        offset:"",
-        limit:"",
       },
       options: [
         {
@@ -567,10 +565,10 @@ export default {
     },
 
     searchData() {
-      this.search.offset = this.pageInfo.currentPage;
-      this.search.limit = this.pageInfo.pageSize;
       req("searchData", {
-        ...this.search,
+        ...this.userForm,
+        pageSize: this.pageInfo.pageSize,
+        currentPage: this.pageInfo.currentPage,
       }).then((data) => {
         console.log(data.data);
         this.tableData = data.data.list;
