@@ -260,25 +260,25 @@ export default {
             req("insertData", { ...this.courseForm }).then((data) => {
               console.log(data.data);
               if (data.data.code === 1) {
-                this.$message.success(data.data.msg);
+                this.$message.success(data.msg);
                 this.fetch();
                 this.$refs[this.courseForm].resetFields();
                 this.courseFormVisible = false;
               } else {
-                this.$message.error(data.data.msg);
+                this.$message.error(data.msg);
               }
             });
           }
           if (this.dialogInfo.type === "modifyCourse") {
             req("updateData", { ...courseForm }).then((data) => {
               console.log(data.data);
-              if (data.data.code === 1) {
-                this.$message.success(data.data.msg);
+              if (data.code === 1) {
+                this.$message.success(data.msg);
                 this.fetch();
                 this.$refs[this.courseForm].resetFields();
                 this.courseFormVisible = false;
               } else {
-                this.$message.error(data.data.msg);
+                this.$message.error(data.msg);
               }
             });
           }
@@ -293,9 +293,9 @@ export default {
 
     deleteCourse(row) {
       this.$confirm("此操作将永久删除该文件,是否继续?").then(() => {
-        let courseId = row.courseId.toString();
+        let courseId = row.courseId;
         req("deleteData", { courseId: courseId }).then((data) => {
-          this.$message.success(data.data.msg);
+          this.$message.success(data.msg);
           this.fetch();
         });
       });
@@ -312,7 +312,7 @@ export default {
           })
           .toString();
         req("deleteData", { courseId: courseIdList }).then((data) => {
-          this.$message.success(data.data.msg);
+          this.$message.success(data.msg);
           this.fetch();
         });
       });

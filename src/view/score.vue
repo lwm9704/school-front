@@ -108,41 +108,41 @@
       <el-form :model="scoreForm" :rules="scoreRules" :ref="scoreForm">
         <el-form-item label="课程名称" prop="courseName" :label-width="formLabelWidth">
           <el-select
-            v-model="scoreForm.courseName"
+            v-model="scoreForm.courseId"
             clearable
             placeholder="请选择"
           >
             <el-option
               v-for="item in courseList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              :key="item.courseId"
+              :label="item.courseName"
+              :value="item.courseId"
             ></el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="班级" prop="grade" :label-width="formLabelWidth">
-          <el-select v-model="scoreForm.grade" clearable placeholder="请选择">
+          <el-select v-model="scoreForm.classesId" clearable placeholder="请选择">
             <el-option
               v-for="item in gradeList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              :key="item.classesId"
+              :label="item.classesName"
+              :value="item.classesId"
             ></el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="学生" prop="studentName" :label-width="formLabelWidth">
           <el-select
-            v-model="scoreForm.studentName"
+            v-model="scoreForm.sId"
             clearable
             placeholder="请选择"
           >
             <el-option
               v-for="item in studentList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              :key="item.sId"
+              :label="item.sName"
+              :value="item.sId"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -214,9 +214,9 @@ export default {
       },
       scoreFormVisible: false,
       scoreForm: {
-        courseName: "",
-        grade: "",
-        studentName: "",
+        courseId: "",
+        classesId: "",
+        sId: "",
         year: "",
         semester: "",
         score: "",
@@ -359,26 +359,26 @@ export default {
           if (this.dialogInfo.type === "addScore") {
             req("insertData", { ...this.scoreForm }).then((data) => {
               console.log(data.data);
-              if (data.data.code === 1) {
-                this.$message.success(data.data.msg);
+              if (data.code === 1) {
+                this.$message.success(data.msg);
                 this.fetch();
                 this.$refs.scoreForm.resetFields();
                 this.scoreFormVisible = false;
               } else {
-                this.$message.error(data.data.msg);
+                this.$message.error(data.msg);
               }
             });
           }
           if (this.dialogInfo.type === "scoreEdit") {
             req("updateData", { ...scoreForm }).then((data) => {
               console.log(data.data);
-              if (data.data.code === 1) {
-                this.$message.success(data.data.msg);
+              if (data.code === 1) {
+                this.$message.success(data.msg);
                 this.fetch();
                 this.scoreForm.resetFields();
                 this.scoreFormVisible = false;
               } else {
-                this.$message.error(data.data.msg);
+                this.$message.error(data.msg);
               }
             });
           }
@@ -394,7 +394,7 @@ export default {
       this.$confirm("此操作将永久删除该文件,是否继续?").then(() => {
         let scoreId = row.scoreId.toString();
         req("deleteData", { scoreId: scoreId }).then((data) => {
-          this.$message.success(data.data.msg);
+          this.$message.success(data.msg);
           this.fetch();
         });
       });
@@ -411,7 +411,7 @@ export default {
           })
           .toString();
         req("deleteData", { scoreId: scoreIdList }).then((data) => {
-          this.$message.success(data.data.msg);
+          this.$message.success(data.msg);
           this.fetch();
         });
       });
