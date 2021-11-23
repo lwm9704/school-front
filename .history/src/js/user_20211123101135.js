@@ -42,11 +42,6 @@ const config = {
         method: 'post'
     },
 
-    getClassList:{
-        url:'/classes/queryAll',
-        method:'get'
-    }
-
 }
 const request = function (funcName, requestParam) {
     return req(config[funcName].url, config[funcName].method, requestParam, {}, config[funcName].fileConfig)

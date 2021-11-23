@@ -44,34 +44,42 @@
       </dl>
     </div>
     <div class="info_table">
-      <el-table :data="tableData" border style="width: 100%" height="500px">
+      <el-table :data="tableData" border style="width: 100%" height="250">
         <el-table-column
           fixed
           prop="userId"
           label="Id"
-          width="200"
+          width="150"
         ></el-table-column>
         <el-table-column
           prop="account"
           label="账号"
-          width="200"
+          width="120"
         ></el-table-column>
-        <el-table-column prop="name" label="姓名" width="200"></el-table-column>
+        <el-table-column
+          prop="name"
+          label="姓名"
+          width="120"
+        ></el-table-column>
         <el-table-column
           prop="identity"
           label="身份"
-          width="200"
+          width="120"
         ></el-table-column>
-        <el-table-column prop="sex" label="性别" width="200"></el-table-column>
         <el-table-column
-          prop="phone"
+          prop="sex"
+          label="性别"
+          width="120"
+        ></el-table-column>
+        <el-table-column
+          prop="user.phone"
           label="手机号码"
-          width="200"
+          width="120"
         ></el-table-column>
         <el-table-column
-          prop="email"
+          prop="user.email"
           label="邮箱"
-          width="200"
+          width="120"
         ></el-table-column>
       </el-table>
     </div>
@@ -105,11 +113,7 @@
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-form-item>
-          <el-form-item
-            label="账号"
-            prop="account"
-            :label-width="formLabelWidth"
-          >
+          <el-form-item label="账号" prop="account" :label-width="formLabelWidth">
             <el-input v-model="userForm.account" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="密码" prop="pwd" :label-width="formLabelWidth">
@@ -119,16 +123,8 @@
               show-password
             ></el-input>
           </el-form-item>
-          <el-form-item
-            label="身份"
-            prop="identity"
-            :label-width="formLabelWidth"
-          >
-            <el-select
-              v-model="userForm.identity"
-              clearable
-              placeholder="请选择"
-            >
+          <el-form-item label="身份" prop="identity" :label-width="formLabelWidth">
+            <el-select v-model="userForm.identity" clearable placeholder="请选择">
               <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -148,8 +144,8 @@
       <!--学生信息-->
       <el-dialog title="学生信息" :visible.sync="studentFormVisible">
         <el-form :model="studentForm" :rules="studentRules" :ref="studentForm">
-          <el-form-item label="姓名" prop="sName" :label-width="formLabelWidth">
-            <el-input v-model="studentForm.sName" autocomplete="off"></el-input>
+          <el-form-item label="姓名" prop="name" :label-width="formLabelWidth">
+            <el-input v-model="studentForm.name" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="性别" :label-width="formLabelWidth">
             <el-select v-model="studentForm.sex" placeholder="请选择">
@@ -157,15 +153,17 @@
               <el-option label="女" value="1"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item
-            label="手机号"
-            prop="phone"
-            :label-width="formLabelWidth"
-          >
-            <el-input v-model="studentForm.phone" autocomplete="off"></el-input>
+          <el-form-item label="手机号" :label-width="formLabelWidth">
+            <el-input
+              v-model="studentForm.sPhone"
+              autocomplete="off"
+            ></el-input>
           </el-form-item>
-          <el-form-item label="邮箱" prop="email" :label-width="formLabelWidth">
-            <el-input v-model="studentForm.email" autocomplete="off"></el-input>
+          <el-form-item label="邮箱" :label-width="formLabelWidth">
+            <el-input
+              v-model="studentForm.sEmail"
+              autocomplete="off"
+            ></el-input>
           </el-form-item>
           <el-form-item label="出生日期" prop="birthday" required>
             <el-date-picker
@@ -176,101 +174,70 @@
               placeholder="选择日期"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item
-            label="身份证号码"
-            prop="idCar"
-            :label-width="formLabelWidth"
-          >
-            <el-input v-model="studentForm.idCar" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item
-            label="联系人"
-            prop="concats"
-            :label-width="formLabelWidth"
-          >
+          <el-form-item label="身份证号码" :label-width="formLabelWidth">
             <el-input
-              v-model="studentForm.concats"
+              v-model="studentForm.idCard"
               autocomplete="off"
             ></el-input>
           </el-form-item>
-          <el-form-item
-            label="联系人电话"
-            prop="cPhone"
-            :label-width="formLabelWidth"
-          >
+          <el-form-item label="联系人" :label-width="formLabelWidth">
+            <el-input
+              v-model="studentForm.concat"
+              autocomplete="off"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="联系人电话" :label-width="formLabelWidth">
             <el-input
               v-model="studentForm.cPhone"
               autocomplete="off"
             ></el-input>
           </el-form-item>
-          <el-form-item
-            label="家庭地址"
-            prop="hAddress"
-            :label-width="formLabelWidth"
-          >
+          <el-form-item label="家庭地址" :label-width="formLabelWidth">
             <el-input
-              v-model="studentForm.hAddress"
+              v-model="studentForm.address"
               autocomplete="off"
             ></el-input>
           </el-form-item>
-          <el-form-item
-            label="家庭邮编"
-            prop="postCode"
-            :label-width="formLabelWidth"
-          >
+          <el-form-item label="家庭邮编" :label-width="formLabelWidth">
             <el-input
               v-model="studentForm.postCode"
               autocomplete="off"
             ></el-input>
           </el-form-item>
-          <el-form-item
-            label="家庭状况"
-            prop="hState"
-            :label-width="formLabelWidth"
-          >
+          <el-form-item label="家庭状况" :label-width="formLabelWidth">
             <el-input
-              v-model="studentForm.hState"
+              v-model="studentForm.homeState"
               autocomplete="off"
             ></el-input>
           </el-form-item>
-          <el-form-item
-            label="父亲姓名"
-            prop="fName"
-            :label-width="formLabelWidth"
-          >
-            <el-input v-model="studentForm.fName" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item
-            label="父亲电话"
-            prop="fPhone"
-            :label-width="formLabelWidth"
-          >
+          <el-form-item label="父亲姓名" :label-width="formLabelWidth">
             <el-input
-              v-model="studentForm.fPhone"
+              v-model="studentForm.faName"
               autocomplete="off"
             ></el-input>
           </el-form-item>
-          <el-form-item
-            label="母亲姓名"
-            prop="mName"
-            :label-width="formLabelWidth"
-          >
-            <el-input v-model="studentForm.mName" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item
-            label="母亲电话"
-            prop="mPhone"
-            :label-width="formLabelWidth"
-          >
+          <el-form-item label="父亲电话" :label-width="formLabelWidth">
             <el-input
-              v-model="studentForm.mPhone"
+              v-model="studentForm.faPhone"
               autocomplete="off"
             ></el-input>
           </el-form-item>
-          <el-form-item label="备注" prop="mark" :label-width="formLabelWidth">
+          <el-form-item label="母亲姓名" :label-width="formLabelWidth">
+            <el-input
+              v-model="studentForm.moName"
+              autocomplete="off"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="母亲电话" :label-width="formLabelWidth">
+            <el-input
+              v-model="studentForm.moPhone"
+              autocomplete="off"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="备注" :label-width="formLabelWidth">
             <el-input v-model="studentForm.mark" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="状态" prop="state" :label-width="formLabelWidth">
+          <el-form-item label="状态" :label-width="formLabelWidth">
             <el-select v-model="studentForm.state" placeholder="请选择">
               <el-option label="在读" value="0"></el-option>
               <el-option label="已毕业" value="1"></el-option>
@@ -282,9 +249,9 @@
             <el-select v-model="studentForm.class" placeholder="请选择">
               <el-option
                 v-for="item in classList"
-                :key="item.classesId"
-                :label="item.classesName"
-                :value="item.classesId"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -309,11 +276,7 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item
-            label="手机号码"
-            prop="tPhone"
-            :label-width="formLabelWidth"
-          >
+          <el-form-item label="手机号码" prop="tPhone" :label-width="formLabelWidth">
             <el-input
               v-model="teacherForm.tPhone"
               autocomplete="off"
@@ -331,21 +294,13 @@
               placeholder="选择日期"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item
-            label="身份证号码"
-            prop="idCar"
-            :label-width="formLabelWidth"
-          >
+          <el-form-item label="身份证号码" prop="idCard" :label-width="formLabelWidth">
             <el-input
               v-model="teacherForm.idCard"
               autocomplete="off"
             ></el-input>
           </el-form-item>
-          <el-form-item
-            label="毕业学校"
-            prop="graduationSchool"
-            :label-width="formLabelWidth"
-          >
+          <el-form-item label="毕业学校" prop="graduationSchool" :label-width="formLabelWidth">
             <el-input
               v-model="teacherForm.graduationSchool"
               autocomplete="off"
@@ -360,21 +315,13 @@
               placeholder="选择日期"
             ></el-date-picker>
           </el-form-item> -->
-          <el-form-item
-            label="学历"
-            prop="education"
-            :label-width="formLabelWidth"
-          >
+          <el-form-item label="学历" prop="education" :label-width="formLabelWidth">
             <el-select v-model="teacherForm.education" placeholder="请选择">
               <el-option label="本科" value="0"></el-option>
               <el-option label="研究生" value="1"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item
-            label="学位"
-            prop="academicDegree"
-            :label-width="formLabelWidth"
-          >
+          <el-form-item label="学位" prop="academicDegree" :label-width="formLabelWidth">
             <el-select
               v-model="teacherForm.academicDegree"
               placeholder="请选择"
@@ -384,11 +331,7 @@
               <el-option label="博士" value="2"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item
-            label="所学专业"
-            prop="major"
-            :label-width="formLabelWidth"
-          >
+          <el-form-item label="所学专业" prop="major" :label-width="formLabelWidth">
             <el-input v-model="teacherForm.major" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="状态" prop="state" :label-width="formLabelWidth">
@@ -504,27 +447,27 @@ export default {
       },
       studentFormVisible: false,
       studentForm: {
-        sId: "",
-        sName: "",
+        sId:"",
+        name: "",
         sex: "",
-        phone: "",
-        eamil: "",
+        sPhone: "",
+        sEamil: "",
         birthday: "",
-        idCar: "",
-        concats: "",
+        idCard: "",
+        concat: "",
         cPhone: "",
-        hAddress: "",
-        postCode: "",
-        hState: "",
-        fName: "",
-        fPhone: "",
-        mName: "",
-        mPhone: "",
+        address: "",
+        homeState: "",
+        homeState: "",
+        faName: "",
+        faPhone: "",
+        moName: "",
+        moPhone: "",
         state: "",
         mark: "",
-        classId: "",
+        class: "",
+        classes: [],
       },
-      classList: [],
       studentRules: {
         sPhone: [
           { required: true, message: "请输入手机号码", trigger: "blur" },
@@ -559,9 +502,9 @@ export default {
         tPhone: "",
         email: "",
         birthday: "",
-        idCar: "",
+        idCard: "",
         graduationSchool: "",
-        graduationYear: "",
+        graduationYear:"",
         education: "",
         academicDegree: "",
         major: "",
@@ -588,9 +531,6 @@ export default {
         identity: "",
       },
     };
-  },
-  mounted() {
-    this.fetch();
   },
   methods: {
     //获取用户信息
@@ -632,18 +572,6 @@ export default {
       this.pageInfo.pageSize = 5;
       this.pageInfo.currentPage = 1;
       this.searchData();
-      this.getClassList();
-    },
-
-    getClassList() {
-      req("getClassList", {}).then((data) => {
-        if (data.code === 1) {
-          this.classList = data.data;
-          console.log(this.classList);
-        } else {
-          this.$message.error(data.msg);
-        }
-      });
     },
 
     searchData() {
@@ -717,6 +645,51 @@ export default {
           this.teacherFormVisible = true;
         }
       }
+      // this.$refs[this.userForm].validate((valid) => {
+      //   if (valid) {
+      //     if (this.dialogInfo.type == "addUser") {
+      //       req("insertUser", {
+      //         ...this.userForm,
+      //       }).then((data) => {
+      //         if (data.data.code === 1) {
+      //           this.userFormVisible = false;
+      //           if (this.userForm.role === "student") {
+      //             this.dialogInfo.type = "addStudent";
+      //             this.dialogInfo.title = "新增";
+      //             this.studentFormVisible = true;
+      //           }
+      //           if (this.userForm.role === "teacher") {
+      //             this.dialogInfo.type = "addTeacher";
+      //             this.dialogInfo.title = "新增";
+      //             this.teacherFormVisible = true;
+      //           }
+      //         } else {
+      //           this.$message.error(data.data.msg);
+      //         }
+      //       });
+      //     }
+      //     if (this.dialogInfo.type === "modifyUser") {
+      //       req("updateUser", { ...this.userForm }).then((data) => {
+      //         if (data.data.code === 1) {
+      //           this.userFormVisible = false;
+      //           if (this.userForm.role === "student") {
+      //             this.dialogInfo.type = "modifyStudent";
+      //             this.dialogInfo.title = "修改";
+      //             this.studentForm = true;
+      //           }
+      //           if (this.userForm.role === "teacher") {
+      //             this.dialogInfo.type = "modifyTeacher";
+      //             this.dialogInfo.title = "修改";
+      //             this.teacherFormVisible = true;
+      //           }
+      //         } else {
+      //           this.$message.error(data.data.msg);
+      //         }
+      //       });
+      //     }
+      //     this.$refs[this.userForm].resetFields();
+      //   }
+      // });
     },
 
     saveStudentForm() {
@@ -725,8 +698,7 @@ export default {
         req("insertUser", { ...this.userForm }).then((data) => {
           if (data.code === 1) {
             this.$refs[this.userForm].resetFields();
-            this.$refs[this.studentForm].sId = data.data
-            console.log(this.studentForm.sId);
+            this.studentForm.sId = data.data
           } else {
             this.$message.error(data.msg);
           }
@@ -738,7 +710,7 @@ export default {
             // this.$refs[this.userForm].resetFields();
             this.studentFormVisible = false;
           } else {
-            this.$message.error(data.msg);
+            this.$message.error(data.data.msg);
           }
         });
       }
@@ -772,7 +744,7 @@ export default {
             this.$refs[this.userForm].resetFields();
             console.log(data.data.userId);
             this.teacherForm.id = data.data.userId;
-            console.log(this.teacherForm.id);
+            console.log(this.teacherForm.id); 
           } else {
             this.$message.error(data.msg);
           }

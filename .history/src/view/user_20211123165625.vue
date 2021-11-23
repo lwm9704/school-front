@@ -49,29 +49,29 @@
           fixed
           prop="userId"
           label="Id"
-          width="200"
+          width="150"
         ></el-table-column>
         <el-table-column
           prop="account"
           label="账号"
-          width="200"
+          width="120"
         ></el-table-column>
-        <el-table-column prop="name" label="姓名" width="200"></el-table-column>
+        <el-table-column prop="name" label="姓名" width="120"></el-table-column>
         <el-table-column
           prop="identity"
           label="身份"
-          width="200"
+          width="120"
         ></el-table-column>
-        <el-table-column prop="sex" label="性别" width="200"></el-table-column>
+        <el-table-column prop="sex" label="性别" width="120"></el-table-column>
         <el-table-column
           prop="phone"
           label="手机号码"
-          width="200"
+          width="120"
         ></el-table-column>
         <el-table-column
           prop="email"
           label="邮箱"
-          width="200"
+          width="120"
         ></el-table-column>
       </el-table>
     </div>
@@ -725,7 +725,7 @@ export default {
         req("insertUser", { ...this.userForm }).then((data) => {
           if (data.code === 1) {
             this.$refs[this.userForm].resetFields();
-            this.$refs[this.studentForm].sId = data.data
+            this.studentForm.sId = data.data.userId;
             console.log(this.studentForm.sId);
           } else {
             this.$message.error(data.msg);

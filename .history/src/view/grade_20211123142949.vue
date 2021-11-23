@@ -50,7 +50,7 @@
       ></el-table-column>
       <el-table-column
         label="班主任"
-        prop="headmasterName"
+        prop="teacherName"
         width="120"
       ></el-table-column>
 
@@ -85,7 +85,7 @@
           <el-input v-model="gradeForm.classesName" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="班级人数" prop="gradeNum" :label-width="formLabelWidth">
-          <el-input v-model="gradeForm.classesNumber" autocomplete="off"></el-input>
+          <el-input v-model="gradeForm.classesNum" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="班主任" prop="headmaster" :label-width="formLabelWidth">
           <el-select

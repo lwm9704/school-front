@@ -725,7 +725,7 @@ export default {
         req("insertUser", { ...this.userForm }).then((data) => {
           if (data.code === 1) {
             this.$refs[this.userForm].resetFields();
-            this.$refs[this.studentForm].sId = data.data
+            this.studentForm.sId = data.data.userId;
             console.log(this.studentForm.sId);
           } else {
             this.$message.error(data.msg);

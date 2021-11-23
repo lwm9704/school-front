@@ -17,7 +17,7 @@ const config = {
         method:'post'
     },
     getTeacherList:{
-        url:'/teacher/queryAll',
+        url:'/teacher/',
         method:'get'
     }
 }

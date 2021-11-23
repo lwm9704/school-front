@@ -50,7 +50,7 @@
       ></el-table-column>
       <el-table-column
         label="班主任"
-        prop="headmasterName"
+        prop="teacherName"
         width="120"
       ></el-table-column>
 
@@ -80,24 +80,24 @@
 
     <!--添加或修改班级信息-->
     <el-dialog :title="pageInfo.title" :visible.sync="gradeFormVisible">
-      <el-form :model="gradeForm" :rules="gradeRules" :ref="gradeForm">
+      <el-form :v-model="gradeForm" :rules="gradeRules" :ref="gradeForm">
         <el-form-item label="班级名称" prop="gradeName" :label-width="formLabelWidth">
-          <el-input v-model="gradeForm.classesName" autocomplete="off"></el-input>
+          <el-input v-model="gradeForm.gradeName" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="班级人数" prop="gradeNum" :label-width="formLabelWidth">
-          <el-input v-model="gradeForm.classesNumber" autocomplete="off"></el-input>
+          <el-input v-model="gradeForm.gradeNum" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="班主任" prop="headmaster" :label-width="formLabelWidth">
           <el-select
-            v-model="gradeForm.headmasterId"
+            v-model="gradeForm.headmaster"
             clearable
             placeholder="请选择"
           >
             <el-option
               v-for="item in teacherList"
-              :key="item.tname"
-              :label="item.tname"
-              :value="item.teacherId"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -130,18 +130,18 @@ export default {
       },
       gradeFormVisible: false,
       gradeForm: {
-        classesName: "",
-        classesNumber: "",
-        headmasterId: "",
+        gradeName: "",
+        gradeNum: "",
+        headmaster: "",
       },
       gradeRules: {
-        classesName: [
+        gradeName: [
           { required: true, message: "请输入班级名称", trigger: "blur" },
         ],
-        classesNum: [
+        gradeNum: [
           { required: true, message: "请输入班级人数", trigger: "blur" },
         ],
-        headmasterId: [
+        headmaster: [
           { required: true, message: "请选择班主任", trigger: "blur" },
         ],
       },
@@ -211,17 +211,6 @@ export default {
       console.log("重置按钮被点击了");
     },
 
-    getTeacherList(){
-      req('getTeacherList',{}).then((data) =>{
-        if(data.code === 1){
-          this.teacherList = data.data;
-          console.log(this.teacherList)
-        }
-        else{
-          this.$message.error(data.msg);
-        }
-      })
-    },
     //触发事件
     addGrade() {
       this.dialogInfo.type = "addGrade";
@@ -247,26 +236,26 @@ export default {
           if (this.dialogInfo.type === "addGrade") {
             req("insertData", { ...this.gradeForm }).then((data) => {
               console.log(data.data);
-              if (data.code === 1) {
-                this.$message.success(data.msg);
+              if (data.data.code === 1) {
+                this.$message.success(data.data.msg);
                 this.fetch();
                 this.$refs[this.gradeForm].resetFields();
                 this.gradeFormVisible = false;
               } else {
-                this.$message.error(data.msg);
+                this.$message.error(data.data.msg);
               }
             });
           }
           if (this.dialogInfo.type === "headmasterEdit") {
             req("updateData", { ...gradeForm }).then((data) => {
               console.log(data.data);
-              if (data.code === 1) {
-                this.$message.success(data.msg);
+              if (data.data.code === 1) {
+                this.$message.success(data.data.msg);
                 this.fetch();
                 this.$refs[this.gradeForm].resetFields();
                 this.gradeFormVisible = false;
               } else {
-                this.$message.error(data.msg);
+                this.$message.error(data.data.msg);
               }
             });
           }

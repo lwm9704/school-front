@@ -50,7 +50,7 @@
       ></el-table-column>
       <el-table-column
         label="班主任"
-        prop="headmasterName"
+        prop="teacherName"
         width="120"
       ></el-table-column>
 

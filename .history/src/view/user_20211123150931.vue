@@ -49,29 +49,29 @@
           fixed
           prop="userId"
           label="Id"
-          width="200"
+          width="150"
         ></el-table-column>
         <el-table-column
           prop="account"
           label="账号"
-          width="200"
+          width="120"
         ></el-table-column>
-        <el-table-column prop="name" label="姓名" width="200"></el-table-column>
+        <el-table-column prop="name" label="姓名" width="120"></el-table-column>
         <el-table-column
           prop="identity"
           label="身份"
-          width="200"
+          width="120"
         ></el-table-column>
-        <el-table-column prop="sex" label="性别" width="200"></el-table-column>
+        <el-table-column prop="sex" label="性别" width="120"></el-table-column>
         <el-table-column
           prop="phone"
           label="手机号码"
-          width="200"
+          width="120"
         ></el-table-column>
         <el-table-column
           prop="email"
           label="邮箱"
-          width="200"
+          width="120"
         ></el-table-column>
       </el-table>
     </div>
@@ -282,9 +282,9 @@
             <el-select v-model="studentForm.class" placeholder="请选择">
               <el-option
                 v-for="item in classList"
-                :key="item.classesId"
-                :label="item.classesName"
-                :value="item.classesId"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -508,7 +508,7 @@ export default {
         sName: "",
         sex: "",
         phone: "",
-        eamil: "",
+        sEamil: "",
         birthday: "",
         idCar: "",
         concats: "",
@@ -636,10 +636,10 @@ export default {
     },
 
     getClassList() {
-      req("getClassList", {}).then((data) => {
+      req('getClassList', {}).then((data) => {
         if (data.code === 1) {
           this.classList = data.data;
-          console.log(this.classList);
+          console.log(this.teacherList)
         } else {
           this.$message.error(data.msg);
         }
@@ -717,6 +717,51 @@ export default {
           this.teacherFormVisible = true;
         }
       }
+      // this.$refs[this.userForm].validate((valid) => {
+      //   if (valid) {
+      //     if (this.dialogInfo.type == "addUser") {
+      //       req("insertUser", {
+      //         ...this.userForm,
+      //       }).then((data) => {
+      //         if (data.data.code === 1) {
+      //           this.userFormVisible = false;
+      //           if (this.userForm.role === "student") {
+      //             this.dialogInfo.type = "addStudent";
+      //             this.dialogInfo.title = "新增";
+      //             this.studentFormVisible = true;
+      //           }
+      //           if (this.userForm.role === "teacher") {
+      //             this.dialogInfo.type = "addTeacher";
+      //             this.dialogInfo.title = "新增";
+      //             this.teacherFormVisible = true;
+      //           }
+      //         } else {
+      //           this.$message.error(data.data.msg);
+      //         }
+      //       });
+      //     }
+      //     if (this.dialogInfo.type === "modifyUser") {
+      //       req("updateUser", { ...this.userForm }).then((data) => {
+      //         if (data.data.code === 1) {
+      //           this.userFormVisible = false;
+      //           if (this.userForm.role === "student") {
+      //             this.dialogInfo.type = "modifyStudent";
+      //             this.dialogInfo.title = "修改";
+      //             this.studentForm = true;
+      //           }
+      //           if (this.userForm.role === "teacher") {
+      //             this.dialogInfo.type = "modifyTeacher";
+      //             this.dialogInfo.title = "修改";
+      //             this.teacherFormVisible = true;
+      //           }
+      //         } else {
+      //           this.$message.error(data.data.msg);
+      //         }
+      //       });
+      //     }
+      //     this.$refs[this.userForm].resetFields();
+      //   }
+      // });
     },
 
     saveStudentForm() {
@@ -725,8 +770,7 @@ export default {
         req("insertUser", { ...this.userForm }).then((data) => {
           if (data.code === 1) {
             this.$refs[this.userForm].resetFields();
-            this.$refs[this.studentForm].sId = data.data
-            console.log(this.studentForm.sId);
+            this.studentForm.sId = data.data;
           } else {
             this.$message.error(data.msg);
           }
@@ -738,7 +782,7 @@ export default {
             // this.$refs[this.userForm].resetFields();
             this.studentFormVisible = false;
           } else {
-            this.$message.error(data.msg);
+            this.$message.error(data.data.msg);
           }
         });
       }

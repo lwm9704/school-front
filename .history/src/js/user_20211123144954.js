@@ -43,7 +43,7 @@ const config = {
     },
 
     getClassList:{
-        url:'/classes/queryAll',
+        url:'/classes/',
         method:'get'
     }
 
