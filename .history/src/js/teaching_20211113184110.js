@@ -15,21 +15,6 @@ const config = {
     deleteData:{
         url:'/teaching/deleteTeachingById',
         method:'post'
-    },
-    getClassesList:{
-        url:'/classes/queryAll',
-        method:'get'
-    },
-    getTeacherList:{
-        url:'/teacher/queryAll',
-        method:'get'
-    },
-    getCourseList:{
-        url:'/course/queryAll',
-        method:'get'
-    },
-    getGradeList:{
-        url:'/'
     }
 }
 const request = function (funcName, requestParam) {

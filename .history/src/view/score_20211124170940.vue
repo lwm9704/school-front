@@ -140,9 +140,9 @@
           >
             <el-option
               v-for="item in studentList"
-              :key="item.sid"
-              :label="item.sname"
-              :value="item.sid"
+              :key="item.sId"
+              :label="item.sName"
+              :value="item.sId"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -303,7 +303,6 @@ export default {
       req("getStudentList").then((data) => {
         if(data.code === 1){
           this.studentList = data.data;
-          console.log(data.data);
         }else{
           this.$message.error(data.msg);
         }

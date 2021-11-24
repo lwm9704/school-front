@@ -286,7 +286,7 @@ export default {
             });
           }
           if (this.dialogInfo.type === "modifyCourse") {
-            req("updateData", { ...this.courseForm }).then((data) => {
+            req("updateData", { ...courseForm }).then((data) => {
               console.log(data.data);
               if (data.code === 1) {
                 this.$message.success(data.msg);

@@ -140,9 +140,9 @@
           >
             <el-option
               v-for="item in studentList"
-              :key="item.sid"
-              :label="item.sname"
-              :value="item.sid"
+              :key="item.sId"
+              :label="item.sName"
+              :value="item.sId"
             ></el-option>
           </el-select>
         </el-form-item>

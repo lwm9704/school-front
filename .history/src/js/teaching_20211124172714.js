@@ -24,13 +24,7 @@ const config = {
         url:'/teacher/queryAll',
         method:'get'
     },
-    getCourseList:{
-        url:'/course/queryAll',
-        method:'get'
-    },
-    getGradeList:{
-        url:'/'
-    }
+    
 }
 const request = function (funcName, requestParam) {
     return req(config[funcName].url, config[funcName].method, requestParam, {}, config[funcName].fileConfig)

@@ -1,32 +1,19 @@
 <template>
   <div>
-    <div class="main-head" :model="search">
+    <div class="main-head">
       <dl>
         <dd>
-          <el-input
-            v-model="search.studentName"
-            placeholder="学生名称"
-            clearable
-          ></el-input>
-        </dd>
-      </dl>
-      <dl>
-        <dd>
-          <el-input
-            v-model="search.studentNo"
-            placeholder="学生学号"
-            clearable
-          ></el-input>
+          <el-input v-model="search.courseName" placeholder="课程名称" clearable></el-input>
         </dd>
       </dl>
       <dl>
         <dd>
           <el-select v-model="search.grade" placeholder="班级">
             <el-option
-              v-for="item in gradeList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="item in classesList"
+              :key="item.classesId"
+              :label="item.classesName"
+              :value="item.classesId"
             ></el-option>
           </el-select>
         </dd>
@@ -38,14 +25,7 @@
       </dl>
       <dl>
         <dd>
-          <el-button type="primary" @click="addScore">新增</el-button>
-        </dd>
-      </dl>
-      <dl>
-        <dd>
-          <el-button type="primary" @click="deleteScoreList"
-            >删除所选</el-button
-          >
+          <el-button type="primary" @click="addTeaching">新增</el-button>
         </dd>
       </dl>
     </div>
@@ -59,34 +39,17 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column
-        label="学生名称"
-        prop="studentName"
-        width="120"
-      ></el-table-column>
-      <el-table-column
-        label="课程名称"
-        prop="courseName"
-        width="120"
-      ></el-table-column>
+      <el-table-column label="班级名称" prop="gradeName" width="120"></el-table-column>
+      <el-table-column label="老师名称" prop="teacherName" width="120"></el-table-column>
       <el-table-column label="年份" prop="year" width="120"></el-table-column>
-      <el-table-column
-        label="学期"
-        prop="semester"
-        width="120"
-      ></el-table-column>
-      <el-table-column label="成绩" prop="score" width="120"></el-table-column>
+      <el-table-column label="学期" prop="semester" width="120"></el-table-column>
       <el-table-column label="状态" prop="state" width="120"></el-table-column>
       <el-table-column label="备注" prop="mark" width="120"></el-table-column>
 
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" @click="deleteScore(scope.row)"
-            >删除</el-button
-          >
-          <el-button size="mini" @click="scoreEdit(scope.row)"
-            >修改信息</el-button
-          >
+          <el-button size="mini" @click="teachingDelete(scope.row)">删除</el-button>
+          <el-button size="mini" @click="teachingEdit(scope.row)">修改信息</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -103,15 +66,22 @@
       ></el-pagination>
     </div>
 
-    <!--添加或修改成绩信息-->
-    <el-dialog :title="dialogInfo.title" :visible.sync="scoreFormVisible">
-      <el-form :model="scoreForm" :rules="scoreRules" :ref="scoreForm">
-        <el-form-item label="课程名称" prop="courseName" :label-width="formLabelWidth">
-          <el-select
-            v-model="scoreForm.courseId"
-            clearable
-            placeholder="请选择"
-          >
+    <!--添加或修改教学信息-->
+    <el-dialog :title="dialogInfo.title" :visible.sync="teachingFormVisible">
+      <el-form :model="teachingForm" :ref="teachingForm" :rules="teachingRules">
+        <el-form-item label="班级名称" prop="classesId" :label-width="formLabelWidth">
+          <el-select v-model="teachingForm.classesId" clearable placeholder="请选择">
+            <el-option
+              v-for="item in classesList"
+              :key="item.classesId"
+              :label="item.classesName"
+              :value="item.classesId"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="课程名称" prop="courseId" :label-width="formLabelWidth">
+          <el-select v-model="teachingForm.courseId" clearable placeholder="请选择">
             <el-option
               v-for="item in courseList"
               :key="item.courseId"
@@ -121,42 +91,23 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="班级" prop="grade" :label-width="formLabelWidth">
-          <el-select v-model="scoreForm.classesId" clearable placeholder="请选择">
+        <el-form-item label="老师名称" prop="teacherId" :label-width="formLabelWidth">
+          <el-select v-model="teachingForm.teacherId" clearable placeholder="请选择">
             <el-option
-              v-for="item in gradeList"
-              :key="item.classesId"
-              :label="item.classesName"
-              :value="item.classesId"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="学生" prop="sId" :label-width="formLabelWidth">
-          <el-select
-            v-model="scoreForm.sId"
-            clearable
-            placeholder="请选择"
-          >
-            <el-option
-              v-for="item in studentList"
-              :key="item.sid"
-              :label="item.sname"
-              :value="item.sid"
+              v-for="item in teacherList"
+              :key="item.teacherId"
+              :label="item.tname"
+              :value="item.teacherId"
             ></el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="年份" prop="year" :label-width="formLabelWidth">
-          <el-input v-model="scoreForm.year" autocomplete="off"></el-input>
+          <el-input v-model="teachingForm.year" autocomplete="off"></el-input>
         </el-form-item>
 
         <el-form-item label="学期" prop="semester" :label-width="formLabelWidth">
-          <el-select
-            v-model="scoreForm.semester"
-            clearable
-            placeholder="请选择"
-          >
+          <el-select v-model="teachingForm.semester" clearable placeholder="请选择">
             <el-option
               v-for="item in semesterList"
               :key="item.value"
@@ -166,12 +117,8 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="成绩" prop="score" :label-width="formLabelWidth">
-          <el-input v-model="scoreForm.score" autocomplete="off"></el-input>
-        </el-form-item>
-
         <el-form-item label="状态" prop="state" :label-width="formLabelWidth">
-          <el-select v-model="scoreForm.state" clearable placeholder="请选择">
+          <el-select v-model="teachingForm.state" clearable placeholder="请选择">
             <el-option
               v-for="item in stateList"
               :key="item.value"
@@ -182,19 +129,18 @@
         </el-form-item>
 
         <el-form-item label="备注" prop="mark" :label-width="formLabelWidth">
-          <el-input v-model="scoreForm.mark" autocomplete="off"></el-input>
+          <el-input v-model="teachingForm.mark" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="cancelScoreForm">取 消</el-button>
-        <el-button type="primary" @click="saveScoreForm">确 定</el-button>
+        <el-button @click="cancelTeachingForm">取 消</el-button>
+        <el-button type="primary" @click="saveTeachingForm">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
-import req from "../js/score";
-import { validateScore } from "../js/validate";
+import req from "../js/teaching";
 export default {
   data() {
     return {
@@ -203,77 +149,70 @@ export default {
       pageInfo: {
         currentPage: 1,
         total: "",
-        pageSize: "",
+        pageSize: ""
       },
       //表内容数据
       tableData: [],
       multipleSelection: [],
       dialogInfo: {
         type: "",
-        title: "",
+        title: ""
       },
-      scoreFormVisible: false,
-      scoreForm: {
-        courseId: "",
+      teachingFormVisible: false,
+      teachingForm: {
         classesId: "",
-        sId: "",
+        courseId: "",
+        teacherId: "",
         year: "",
         semester: "",
-        score: "",
         state: "",
-        mark: "",
+        mark: ""
       },
-      scoreRules: {
-        courseName: [
-          { required: true, message: "请选择课程", trigger: "blur" },
+      teachingRules: {
+        classesName: [
+          { required: true, message: "请选择班级", trigger: "blur" }
         ],
-        grade: [{ required: true, message: "请选择班级", trigger: "blur" }],
-        studentName: [
-          { required: true, message: "请输入学生姓名", trigger: "blur" },
+        courseName: [
+          { required: true, message: "请选择课程", trigger: "blur" }
+        ],
+        teacherName: [
+          { required: true, message: "请选择老师", trigger: "blur" }
         ],
         year: [{ required: true, message: "请输入年份", trigger: "blur" }],
         semester: [{ required: true, message: "请选择学期", trigger: "blur" }],
-        score: [
-          { required: true, message: "请输入分数", trigger: "blur" },
-          { validator: validateScore, trigger: "blur" },
-        ],
-        state: [{ required: true, message: "请选择状态", trigger: "blur" }],
+        state: [{ required: true, message: "请选择状态", trigger: "blur" }]
       },
-      //搜索，按钮
+      //搜索
       search: {
-        studentName: "",
-        studentNo: "",
+        courseName: "",
         grade: "",
-        offset:"",
-        limit:""
+        offset: "",
+        limit: ""
       },
-      gradeList: [],
-      studentList: [],
+      classesList: [],
       courseList: [],
+      teacherList: [],
       semesterList: [
         {
           value: 1,
-          label: "第一个学期",
+          label: "第一个学期"
         },
         {
           value: 2,
-          label: "第二个学期·",
-        },
+          label: "第二个学期"
+        }
       ],
       stateList: [
         {
           value: 0,
-          label: "下线",
+          label: "下线"
         },
         {
           value: 1,
-          label: "发布",
-        },
-      ],
+          label: "发布"
+        }
+      ]
     };
-  },
-  mounted(){
-    this.fetch();
   },
   methods: {
     //侧边栏的方法
@@ -288,7 +227,6 @@ export default {
     handleSelectionChange(row) {
       this.multipleSelection = row;
     },
-
     //选页的相关方法
     handleSizeChange(pageSize) {
       this.pageInfo.pageSize = pageSize;
@@ -299,42 +237,44 @@ export default {
       console.log(`当前页: ${currentPage}`);
     },
 
-    initAllList() {
-      req("getStudentList").then((data) => {
-        if(data.code === 1){
-          this.studentList = data.data;
-          console.log(data.data);
-        }else{
-          this.$message.error(data.msg);
-        }
-      });
-      req("getCourseList").then((data) => {
-        if(data.code === 1){
-          this.courseList = data.data;
-        }else{
-          this.$message.error(data.msg);
-        }
-      });
-      req("getGradeList").then((data) => {
-        if(data.code === 1){
-          this.gradeList = data.data;
-        }else{
-          this.$message.error(data.msg);
-        }
-      });
-    },
     //搜索
     searchData() {
       this.search.offset = this.pageInfo.currentPage;
       this.search.limit = this.pageInfo.pageSize;
       req("selectData", {
-        ...this.search,
-      }).then((data) => {
+        ...this.search
+      }).then(data => {
         console.log(data.data);
         this.tableData = data.data.list;
         this.pageInfo.pageSize = data.data.pageSize;
         this.pageInfo.currentPage = data.data.currentPage;
         this.pageInfo.total = data.data.total;
+      });
+    },
+
+    initAllList() {
+      req("getClassesList").then(data => {
+        if (data.code === 1) {
+          this.classesList = data.data;
+        } else {
+          this.$message.error(data.msg);
+        }
+      });
+      req("getTeacherList").then(data => {
+        if (data.code === 1) {
+          this.teacherList = data.data;
+          console.log(data.data);
+        } else {
+          this.$message.error(data.msg);
+        }
+      });
+      req("getCourseList").then(data => {
+        if (data.code === 1) {
+          this.courseList = data.data.list;
+          console.log(data.data.list);
+        } else {
+          this.$message.error(data.msg);
+        }
       });
     },
     //刷新页面
@@ -351,42 +291,42 @@ export default {
     },
 
     //触发事件
-    addScore() {
-      this.dialogInfo.type = "addScore";
-      this.dialogInfo.title = "新增成绩信息";
-      this.scoreFormVisible = true;
+    addTeaching() {
+      this.dialogInfo.type = "addTeaching";
+      this.dialogInfo.title = "新增教学信息";
+      this.teachingFormVisible = true;
     },
-    scoreEdit(row) {
-      this.scoreFoscoreEditrm = row;
-      this.dialogInfo.type = "scoreEdit";
-      this.dialogInfo.title = "修改成绩信息";
-      this.scoreFormVisible = true;
+    teachingEdit(row) {
+      this.teacheingForm = row;
+      this.dialogInfo.type = "teachingEdit";
+      this.dialogInfo.title = "修改教学信息";
+      this.teachingFormVisible = true;
     },
 
-    saveScoreForm() {
-      this.$refs[this.scoreForm].validate((valid) => {
+    saveTeachingForm() {
+      this.$refs[this.teachingForm].validate(valid => {
         if (valid) {
-          if (this.dialogInfo.type === "addScore") {
-            req("insertData", { ...this.scoreForm }).then((data) => {
+          if (this.dialogInfo.type === "addTeaching") {
+            req("insertData", { ...this.teachingForm }).then(data => {
               console.log(data.data);
               if (data.code === 1) {
                 this.$message.success(data.msg);
                 this.fetch();
-                this.$refs.scoreForm.resetFields();
-                this.scoreFormVisible = false;
+                this.$refs.teachingForm.resetFields();
+                this.teachingFormVisible = false;
               } else {
                 this.$message.error(data.msg);
               }
             });
           }
-          if (this.dialogInfo.type === "scoreEdit") {
-            req("updateData", { ...scoreForm }).then((data) => {
+          if (this.dialogInfo.type === "teachingEdit") {
+            req("updateData", { ...teachingForm }).then(data => {
               console.log(data.data);
               if (data.code === 1) {
                 this.$message.success(data.msg);
                 this.fetch();
-                this.scoreForm.resetFields();
-                this.scoreFormVisible = false;
+                this.teachingForm.resetFields();
+                this.teachingFormVisible = false;
               } else {
                 this.$message.error(data.msg);
               }
@@ -395,38 +335,42 @@ export default {
         }
       });
     },
-    cancelScoreForm() {
-      this.$refs[this.scoreForm].resetFields();
-      this.scoreFormVisible = false;
+    cancelTeachingForm() {
+      this.$refs[this.teachingForm].resetFields();
+      this.teachingFormVisible = false;
     },
 
-    deleteScore(row) {
+    deleteTeaching(row) {
       this.$confirm("此操作将永久删除该文件,是否继续?").then(() => {
-        let scoreId = row.scoreId.toString();
-        req("deleteData", { scoreId: scoreId }).then((data) => {
+        let teachingId = row.teachingId.toString();
+        req("deleteData", { teachingId: teachingId }).then(data => {
           this.$message.success(data.msg);
           this.fetch();
         });
       });
     },
-    deleteScoreList() {
+    deleteTeachingList() {
       if (this.multipleSelection.length === 0) {
         this.$message.info("请选择需要删除的数据");
         return;
       }
       this.$confirm("此操作将永久删除该文件,是否继续?").then(() => {
-        let scoreIdList = this.multipleSelection
-          .map((item) => {
-            return item.scoreId;
+        let teachingIdList = this.multipleSelection
+          .map(item => {
+            return item.teachingId;
           })
           .toString();
-        req("deleteData", { scoreId: scoreIdList }).then((data) => {
+        req("deleteData", { teachingId: teachingIdList }).then(data => {
           this.$message.success(data.msg);
           this.fetch();
         });
       });
-    },
+    }
   },
+  mounted(){
+    this.fetch();
+    this.initAllList();
+  }
 };
 </script>
 <style lang="scss" scoped>

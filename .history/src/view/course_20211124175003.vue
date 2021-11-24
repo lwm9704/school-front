@@ -52,7 +52,7 @@
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column
         label="课程编号"
-        prop="courseNo"
+        prop="coursrNo"
         width="120"
       ></el-table-column>
       <el-table-column
@@ -68,7 +68,7 @@
       ></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="modifyCourse(scope.row)"
+          <el-button size="mini" @click="modifyCourse(scope.row)"
             >课程编辑</el-button
           >
           <el-button size="mini" @click="deleteCourse(scope.row)"
@@ -239,6 +239,7 @@ export default {
       }).then((data) => {
         console.log(data.data);
         this.tableData = data.data.list;
+        console.log(data.data.list);
         this.pageInfo.pageSize = data.data.pageSize;
         this.pageInfo.currentPage = data.data.currentPage;
         this.pageInfo.total = data.data.total;
@@ -286,7 +287,7 @@ export default {
             });
           }
           if (this.dialogInfo.type === "modifyCourse") {
-            req("updateData", { ...this.courseForm }).then((data) => {
+            req("updateData", { ...courseForm }).then((data) => {
               console.log(data.data);
               if (data.code === 1) {
                 this.$message.success(data.msg);
