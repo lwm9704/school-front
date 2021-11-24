@@ -108,7 +108,7 @@
       <el-form :model="scoreForm" :rules="scoreRules" :ref="scoreForm">
         <el-form-item label="课程名称" prop="courseName" :label-width="formLabelWidth">
           <el-select
-            v-model="scoreForm.courseName"
+            v-model="scoreForm.courseId"
             clearable
             placeholder="请选择"
           >
@@ -122,7 +122,7 @@
         </el-form-item>
 
         <el-form-item label="班级" prop="grade" :label-width="formLabelWidth">
-          <el-select v-model="scoreForm.grade" clearable placeholder="请选择">
+          <el-select v-model="scoreForm.classesId" clearable placeholder="请选择">
             <el-option
               v-for="item in gradeList"
               :key="item.classesId"
@@ -134,7 +134,7 @@
 
         <el-form-item label="学生" prop="studentName" :label-width="formLabelWidth">
           <el-select
-            v-model="scoreForm.studentName"
+            v-model="scoreForm.sId"
             clearable
             placeholder="请选择"
           >
@@ -214,9 +214,9 @@ export default {
       },
       scoreFormVisible: false,
       scoreForm: {
-        courseName: "",
-        grade: "",
-        studentName: "",
+        courseId: "",
+        classesId: "",
+        sId: "",
         year: "",
         semester: "",
         score: "",

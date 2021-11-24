@@ -3,11 +3,7 @@
     <div class="main-head" :model="search">
       <dl>
         <dd>
-          <el-input
-            v-model="search.teacherName"
-            placeholder="老师名称"
-            clearable
-          ></el-input>
+          <el-input v-model="search.teacherName" placeholder="老师名称" clearable></el-input>
         </dd>
       </dl>
       <dl>
@@ -15,9 +11,9 @@
           <el-select v-model="search.grade" placeholder="班级">
             <el-option
               v-for="item in gradeList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              :key="item.classesId"
+              :label="item.classesName"
+              :value="item.classesId"
             ></el-option>
           </el-select>
         </dd>
@@ -34,9 +30,7 @@
       </dl>
       <dl>
         <dd>
-          <el-button type="primary" @click="deletedlectureList"
-            >删除所选</el-button
-          >
+          <el-button type="primary" @click="deletedlectureList">删除所选</el-button>
         </dd>
       </dl>
     </div>
@@ -50,25 +44,13 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column
-        label="课程名称"
-        prop="courseName"
-        width="120"
-      ></el-table-column>
-      <el-table-column
-        label="老师名称"
-        prop="teacherName"
-        width="120"
-      ></el-table-column>
+      <el-table-column label="课程名称" prop="courseName" width="120"></el-table-column>
+      <el-table-column label="老师名称" prop="teacherName" width="120"></el-table-column>
 
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" @click="deleteLecture(scope.row)"
-            >删除</el-button
-          >
-          <el-button size="mini" @click="editLecture(scope.row)"
-            >修改信息</el-button
-          >
+          <el-button size="mini" @click="deleteLecture(scope.row)">删除</el-button>
+          <el-button size="mini" @click="editLecture(scope.row)">修改信息</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -89,31 +71,23 @@
     <el-dialog :title="pageInfo.title" :visible.sync="lectureFormVisible">
       <el-form :model="lectureForm" :rules="lectureRules" :ref="lectureForm">
         <el-form-item label="课程名称" prop="courseName" :label-width="formLabelWidth">
-          <el-select
-            v-model="lectureForm.courseName"
-            clearable
-            placeholder="请选择"
-          >
+          <el-select v-model="lectureForm.courseId" clearable placeholder="请选择">
             <el-option
               v-for="item in courseList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              :key="item.courseId"
+              :label="item.courseName"
+              :value="item.courseId"
             ></el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="授课老师" prop="teacherName" :label-width="formLabelWidth">
-          <el-select
-            v-model="lectureForm.teacherName"
-            clearable
-            placeholder="请选择"
-          >
+          <el-select v-model="lectureForm.teacherId" clearable placeholder="请选择">
             <el-option
               v-for="item in teacherList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              :key="item.teacherId"
+              :label="item.teacherName"
+              :value="item.teacherId"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -135,38 +109,38 @@ export default {
       pageInfo: {
         currentPage: 1,
         total: "",
-        pageSize: "",
+        pageSize: ""
       },
       //表内容数据
       tableData: [],
       multipleSelection: [],
       dialogInfo: {
         type: "",
-        titile: "",
+        titile: ""
       },
       lectureFormVisible: false,
       lectureForm: {
-        courseName: "",
-        teacherName: "",
+        courseId: "",
+        teacherId: ""
       },
       lectureRules: {
         courseName: [
-          { required: true, message: "请选择课程", trigger: "blur" },
+          { required: true, message: "请选择课程", trigger: "blur" }
         ],
         teacherName: [
-          { required: true, message: "请选择授课老师", trigger: "blur" },
-        ],
+          { required: true, message: "请选择授课老师", trigger: "blur" }
+        ]
       },
       //搜索，按钮
       search: {
         teacherName: "",
         grade: "",
-        offset:"",
-        limit:""
+        offset: "",
+        limit: ""
       },
       courseList: [],
       teacherList: [],
-      gradeList: [],
+      gradeList: []
     };
   },
   methods: {
@@ -193,13 +167,41 @@ export default {
       console.log(`当前页: ${currentPage}`);
     },
 
+    getCourseList() {
+      req("getCourseList", {}).then(data => {
+        if (data.code === 1) {
+          this.courseList = data.data;
+        } else {
+          this.$message.error(data.msg);
+        }
+      });
+    },
+    getTeacherList() {
+      req("getTeacherList", {}).then(data => {
+        if (data.code === 1) {
+          this.teacherList = data.data;
+        } else {
+          this.$message.error(data.msg);
+        }
+      });
+    },
+    getGradeList() {
+      req("getGradeList", {}).then(data => {
+        if (data.code === 1) {
+          this.gradeList = data.data;
+        } else {
+          this.$message.error(data.msg);
+        }
+      });
+    },
+
     //搜索
     searchData() {
       this.search.offset = this.pageInfo.currentPage;
-      this.search.limit =  this.pageInfo.pageSize;
+      this.search.limit = this.pageInfo.pageSize;
       req("selectData", {
-        ...this.search,
-      }).then((data) => {
+        ...this.search
+      }).then(data => {
         console.log(data.data);
         this.tableData = data.data.list;
         this.pageInfo.pageSize = data.data.pageSize;
@@ -208,18 +210,9 @@ export default {
       });
     },
     initAllList() {
-      req("getCourseList").then((data) => {
-        console.log(data.data);
-        this.courseList = data.data.list;
-      });
-      req("getTeacherList").then((data) => {
-        console.log(data.data);
-        this.teacherList = data.data.list;
-      });
-      req("getGradeList").then((data) => {
-        console.log(data.data);
-        this.gradeList = data.data.list;
-      });
+      this.getCourseList();
+      this.getTeacherList();
+      this.getGradeList();
     },
     //刷新页面
     fetch() {
@@ -248,31 +241,31 @@ export default {
     },
 
     saveLectureForm() {
-      this.$refs[this.lectureForm].validate((valid) => {
+      this.$refs[this.lectureForm].validate(valid => {
         if (valid) {
           if (this.dialogInfo.type === "addLecture") {
-            req("insertData", { ...this.lectureForm }).then((data) => {
+            req("insertData", { ...this.lectureForm }).then(data => {
               console.log(data.data);
               if (data.data.code === 1) {
-                this.$message.success(data.data.msg);
+                this.$message.success(data.msg);
                 this.fetch();
                 this.$refs[this.lectureForm].resetFields();
                 this.lectureFormVisible = false;
               } else {
-                this.$message.error(data.data.msg);
+                this.$message.error(data.msg);
               }
             });
           }
           if (this.dialogInfo.type === "editLecture") {
-            req("updateData", { ...lectureForm }).then((data) => {
+            req("updateData", { ...lectureForm }).then(data => {
               console.log(data.data);
-              if (data.data.code === 1) {
-                this.$message.success(data.data.msg);
+              if (data.code === 1) {
+                this.$message.success(data.msg);
                 this.fetch();
                 this.$refs[this.lectureForm].resetFields();
                 this.lectureFormVisible = false;
               } else {
-                this.$message.error(data.data.msg);
+                this.$message.error(data.msg);
               }
             });
           }
@@ -287,8 +280,8 @@ export default {
     deleteLecture(row) {
       this.$confirm("此操作将永久删除该文件,是否继续?").then(() => {
         let lectureId = row.lectureId.toString();
-        req("deleteData", { lectureId: lecttureId }).then((data) => {
-          this.$message.success(data.data.msg);
+        req("deleteData", { lectureId: lecttureId }).then(data => {
+          this.$message.success(data.msg);
           this.fetch();
         });
       });
@@ -300,17 +293,21 @@ export default {
       }
       this.$confirm("此操作将永久删除该文件,是否继续?").then(() => {
         let lectureIdList = this.multipleSelection
-          .map((item) => {
+          .map(item => {
             return item.lectureId;
           })
           .toString();
-        req("deleteData", { lectureId: lectureIdList }).then((data) => {
-          this.$message.success(data.data.msg);
+        req("deleteData", { lectureId: lectureIdList }).then(data => {
+          this.$message.success(data.msg);
           this.fetch();
         });
       });
-    },
+    }
   },
+  mounted(){
+    this.fetch();
+    this.initAllList();
+  }
 };
 </script>
 <style lang="scss" scoped>
