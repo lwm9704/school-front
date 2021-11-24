@@ -114,9 +114,9 @@
           >
             <el-option
               v-for="item in courseList"
-              :key="item.courseId"
-              :label="item.courseName"
-              :value="item.courseId"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -125,9 +125,9 @@
           <el-select v-model="scoreForm.grade" clearable placeholder="请选择">
             <el-option
               v-for="item in gradeList"
-              :key="item.classesId"
-              :label="item.classesName"
-              :value="item.classesId"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -140,9 +140,9 @@
           >
             <el-option
               v-for="item in studentList"
-              :key="item.sId"
-              :label="item.sName"
-              :value="item.sId"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -368,26 +368,26 @@ export default {
           if (this.dialogInfo.type === "addScore") {
             req("insertData", { ...this.scoreForm }).then((data) => {
               console.log(data.data);
-              if (data.code === 1) {
-                this.$message.success(data.msg);
+              if (data.data.code === 1) {
+                this.$message.success(data.data.msg);
                 this.fetch();
                 this.$refs.scoreForm.resetFields();
                 this.scoreFormVisible = false;
               } else {
-                this.$message.error(data.msg);
+                this.$message.error(data.data.msg);
               }
             });
           }
           if (this.dialogInfo.type === "scoreEdit") {
             req("updateData", { ...scoreForm }).then((data) => {
               console.log(data.data);
-              if (data.code === 1) {
-                this.$message.success(data.msg);
+              if (data.data.code === 1) {
+                this.$message.success(data.data.msg);
                 this.fetch();
                 this.scoreForm.resetFields();
                 this.scoreFormVisible = false;
               } else {
-                this.$message.error(data.msg);
+                this.$message.error(data.data.msg);
               }
             });
           }
@@ -403,7 +403,7 @@ export default {
       this.$confirm("此操作将永久删除该文件,是否继续?").then(() => {
         let scoreId = row.scoreId.toString();
         req("deleteData", { scoreId: scoreId }).then((data) => {
-          this.$message.success(data.msg);
+          this.$message.success(data.data.msg);
           this.fetch();
         });
       });
@@ -420,7 +420,7 @@ export default {
           })
           .toString();
         req("deleteData", { scoreId: scoreIdList }).then((data) => {
-          this.$message.success(data.msg);
+          this.$message.success(data.data.msg);
           this.fetch();
         });
       });

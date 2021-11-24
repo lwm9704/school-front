@@ -4,7 +4,7 @@
       <dl>
         <dd>
           <el-input
-            v-model="search.sName"
+            v-model="search.studentName"
             placeholder="学生名称"
             clearable
           ></el-input>
@@ -12,12 +12,12 @@
       </dl>
       <dl>
         <dd>
-          <el-select v-model="search.classesId" placeholder="班级">
+          <el-select v-model="search.grade" placeholder="班级">
             <el-option
               v-for="item in gradeList"
-              :key="item.classesId"
-              :label="item.classesName"
-              :value="item.classesId"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
             ></el-option>
           </el-select>
         </dd>
@@ -60,7 +60,7 @@
       ></el-table-column>
       <el-table-column
         label="姓名"
-        prop="memberName"
+        prop="familyName"
         width="120"
       ></el-table-column>
       <el-table-column label="性别" prop="sex" width="120"></el-table-column>
@@ -119,11 +119,11 @@
       <el-form :model="memberForm" :rules="memberRules" :ref="memberForm">
         <el-form-item
           label="班级名称"
-          prop="classesId"
+          prop="grade"
           :label-width="formLabelWidth"
         >
           <el-select
-            v-model="memberForm.classesId"
+            v-model="memberForm.grade"
             placeholder="班级名称"
             @change="getStudentInfo"
           >
@@ -266,7 +266,7 @@ export default {
         title: "",
       },
       memberForm: {
-        classesId: "",
+        grade: "",
         sId: "",
         sName:"",
         type: "",
@@ -308,8 +308,8 @@ export default {
       },
       //搜索，按钮
       search: {
-        sName: "",
-        classesId: "",
+        studentName: "",
+        grade: "",
         offset: "",
         limit: "",
       },
@@ -455,12 +455,12 @@ export default {
             });
           }
           if (this.dialogInfo.type === "editMember") {
-            req("updateData", { ...this.memberForm }).then((data) => {
+            req("updateData", { ...memberForm }).then((data) => {
               console.log(data.data);
               if (data.code === 1) {
                 this.$message.success(data.msg);
                 this.fetch();
-                this.$$refs[this.memberForm].resetFields();
+                this.memberForm.resetFields();
                 this.memberFormVisible = false;
               } else {
                 this.$message.error(data.msg);

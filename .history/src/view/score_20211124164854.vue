@@ -114,9 +114,9 @@
           >
             <el-option
               v-for="item in courseList"
-              :key="item.courseId"
-              :label="item.courseName"
-              :value="item.courseId"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -125,9 +125,9 @@
           <el-select v-model="scoreForm.grade" clearable placeholder="请选择">
             <el-option
               v-for="item in gradeList"
-              :key="item.classesId"
-              :label="item.classesName"
-              :value="item.classesId"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -140,9 +140,9 @@
           >
             <el-option
               v-for="item in studentList"
-              :key="item.sId"
-              :label="item.sName"
-              :value="item.sId"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
             ></el-option>
           </el-select>
         </el-form-item>

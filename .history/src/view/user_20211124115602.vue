@@ -189,11 +189,11 @@
           </el-form-item>
           <el-form-item
             label="联系人"
-            prop="contacts"
+            prop="concats"
             :label-width="formLabelWidth"
           >
             <el-input
-              v-model="studentForm.contacts"
+              v-model="studentForm.concats"
               autocomplete="off"
             ></el-input>
           </el-form-item>
@@ -283,7 +283,7 @@
           </el-form-item>
           <!--待修改-->
           <el-form-item label="班级" :label-width="formLabelWidth">
-            <el-select v-model="studentForm.classId" placeholder="请选择">
+            <el-select v-model="studentForm.class" placeholder="请选择">
               <el-option
                 v-for="item in classList"
                 :key="item.classesId"
@@ -341,7 +341,7 @@
             :label-width="formLabelWidth"
           >
             <el-input
-              v-model="teacherForm.idCar"
+              v-model="teacherForm.idCard"
               autocomplete="off"
             ></el-input>
           </el-form-item>
@@ -508,14 +508,14 @@ export default {
       },
       studentFormVisible: false,
       studentForm: {
-        sId: "",
+        studentId: "",
         sName: "",
         sex: "",
         phone: "",
         eamil: "",
         birthday: "",
         idCar: "",
-        contacts: "",
+        concats: "",
         cPhone: "",
         hAddress: "",
         postCode: "",
@@ -557,7 +557,7 @@ export default {
       },
       teacherFormVisible: false,
       teacherForm: {
-        teacherId: "",
+        id: "",
         tName: "",
         sex: "",
         tPhone: "",
@@ -671,24 +671,13 @@ export default {
     },
     modifyUser(row) {
       this.id = row.userId;
-      console.log(this.id)
+
       if (row.identity === "student") {
         this.dialogInfo.type = "modifyStudent";
         this.dialogInfo.title = "修改";
-        this.studentForm.sId = this.id;
-        req("getStudentInfoById", { id:this.id }).then((data) => {
+        req("getStudentInfo", { ...this.id }).then((data) => {
           if (data.code === 1) {
-            console.log(data.data);
             this.studentForm = data.data;
-            this.studentForm.fName = data.data.fname;
-            this.studentForm.fPhone = data.data.fphone;
-            this.studentForm.mName = data.data.mname;
-            this.studentForm.mPhone = data.data.mphone;
-            this.studentForm.sName = data.data.sname;
-            this.studentForm.cPhone = data.data.cphone;
-            this.studentForm.hAddress = data.data.haddress;
-            this.studentForm.hState = data.data.hstate;
-
           } else {
             this.$message.error(data.msg);
           }
@@ -702,13 +691,9 @@ export default {
       ) {
         this.dialogInfo.type = "modifyTeacher";
         this.dialogInfo.title = "修改";
-        this.teacherForm.teacherId = this.id;
-        req("getTeacherInfoById", {id:this.id}).then((data) => {
+        req("getTeacherId", { ...this.id }).then((data) => {
           if (data.code === 1) {
-            console.log(data.data);
             this.teacherForm = data.data;
-            this.teacherForm.tName = data.data.tname;
-            this.teacherForm.tPhone = data.data.tphone;
           } else {
             this.$message.error(data.msg);
           }
@@ -782,7 +767,7 @@ export default {
         //     this.$message.error(data.msg);
         //   }
         // });
-        req("updateStudent", { ...this.studentForm}, {userId:this.sId}).then(
+        req("updateStudent", { ...this.studentForm, ...this.userForm }).then(
           (data) => {
             if (data.code === 1) {
               this.fetch();
@@ -810,7 +795,7 @@ export default {
         //     this.$message.error(data.msg);
         //   }
         // });
-        req("insertTeacher", { ...this.teacherForm,...this.userForm}).then(
+        req("insertTeacher", { ...this.teacherForm, ...this.userForm }).then(
           (data) => {
             if (data.code === 1) {
               this.fetch();
@@ -832,7 +817,7 @@ export default {
         //     this.$message.error(data.data.msg);
         //   }
         // });
-        req("updateTeacher", { ...this.teacherForm,teacherId:this.id}).then(
+        req("updateTeacher", { ...this.teacherForm, ...this.userForm }).then(
           (data) => {
             if (data.code === 1) {
               this.fetch();

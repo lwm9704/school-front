@@ -15,15 +15,6 @@ const config = {
     deleteData:{
         url:'/family/deleteFamilyById',
         method:'post'
-    },
-
-    getGradeList:{
-        url:'/classes/queryAll',
-        method:'get'
-    },
-    getStudentList:{
-        url:'/student/queryAll',
-        method:'get'
     }
 }
 const request = function (funcName, requestParam) {

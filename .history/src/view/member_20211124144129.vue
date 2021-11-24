@@ -4,7 +4,7 @@
       <dl>
         <dd>
           <el-input
-            v-model="search.sName"
+            v-model="search.studentName"
             placeholder="学生名称"
             clearable
           ></el-input>
@@ -12,12 +12,12 @@
       </dl>
       <dl>
         <dd>
-          <el-select v-model="search.classesId" placeholder="班级">
+          <el-select v-model="search.grade" placeholder="班级">
             <el-option
               v-for="item in gradeList"
-              :key="item.classesId"
-              :label="item.classesName"
-              :value="item.classesId"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
             ></el-option>
           </el-select>
         </dd>
@@ -50,7 +50,7 @@
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column
         label="学生名称"
-        prop="sName"
+        prop="studentName"
         width="120"
       ></el-table-column>
       <el-table-column
@@ -60,13 +60,13 @@
       ></el-table-column>
       <el-table-column
         label="姓名"
-        prop="memberName"
+        prop="familyName"
         width="120"
       ></el-table-column>
       <el-table-column label="性别" prop="sex" width="120"></el-table-column>
       <el-table-column
         label="手机号"
-        prop="memberPhone"
+        prop="phone"
         width="120"
       ></el-table-column>
       <el-table-column
@@ -92,7 +92,7 @@
       ></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="memberEdit(scope.row)"
+          <el-button size="mini" @click="memberEdit(scope.row)"
             >成员编辑</el-button
           >
           <el-button size="mini" @click="memberDelete(scope.row)"
@@ -117,43 +117,27 @@
     <!--添加或修改成员信息-->
     <el-dialog :title="dialogInfo.title" :visible.sync="memberFormVisible">
       <el-form :model="memberForm" :rules="memberRules" :ref="memberForm">
-        <el-form-item
-          label="班级名称"
-          prop="classesId"
-          :label-width="formLabelWidth"
-        >
-          <el-select
-            v-model="memberForm.classesId"
-            placeholder="班级名称"
-            @change="getStudentInfo"
-          >
+        <el-form-item label="班级名称" prop="grade" :label-width="formLabelWidth">
+          <el-select v-model="memberForm.grade" placeholder="班级名称" change="getStudentInfo">
             <el-option
               v-for="item in gradeList"
-              :key="item.classesId"
-              :label="item.classesName"
-              :value="item.classesId"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item
-          label="学生名称"
-          prop="sName"
-          :label-width="formLabelWidth"
-        >
-          <el-select v-model="memberForm.sId" placeholder="学生名称">
+        <el-form-item label="学生名称" prop="sName" :label-width="formLabelWidth">
+          <el-select v-model="memberForm.sName" placeholder="学生名称">
             <el-option
               v-for="item in studentList"
-              :key="item.sid"
-              :label="item.sname"
-              :value="item.sid"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item
-          label="成员类型"
-          prop="type"
-          :label-width="formLabelWidth"
-        >
+        <el-form-item label="成员类型" prop="type" :label-width="formLabelWidth">
           <el-select v-model="memberForm.type" clearable placeholder="请选择">
             <el-option
               v-for="item in typeList"
@@ -163,11 +147,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item
-          label="姓名"
-          prop="memberName"
-          :label-width="formLabelWidth"
-        >
+        <el-form-item label="姓名" prop="memberName" :label-width="formLabelWidth">
           <el-input
             v-model="memberForm.memberName"
             autocomplete="off"
@@ -183,40 +163,22 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item
-          label="手机号码"
-          prop="memberPhone"
-          :label-width="formLabelWidth"
-        >
-          <el-input v-model="memberForm.memberPhone" autocomplete="off"></el-input>
+        <el-form-item label="手机号码" prop="phone" :label-width="formLabelWidth">
+          <el-input v-model="memberForm.phone" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item
-          label="电子邮箱"
-          prop="email"
-          :label-width="formLabelWidth"
-        >
+        <el-form-item label="电子邮箱" prop="email" :label-width="formLabelWidth">
           <el-input v-model="memberForm.email" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item
-          label="出生日期"
-          prop="birthday"
-          :label-width="formLabelWidth"
-        >
+        <el-form-item label="出生日期" prop="birthday" :label-width="formLabelWidth">
           <div class="block">
             <el-date-picker
               v-model="memberForm.birthday"
               type="date"
-              format="yyyy-MM-dd"
-              value-format="yyyy-MM-dd"
               placeholder="选择日期"
             ></el-date-picker>
           </div>
         </el-form-item>
-        <el-form-item
-          label="身份证号码"
-          prop="idCar"
-          :label-width="formLabelWidth"
-        >
+        <el-form-item label="身份证号码" prop="idCar" :label-width="formLabelWidth">
           <el-input v-model="memberForm.idCar" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="状态" prop="state" :label-width="formLabelWidth">
@@ -266,22 +228,21 @@ export default {
         title: "",
       },
       memberForm: {
-        classesId: "",
-        sId: "",
-        sName:"",
+        grade: "",
+        sName: "",
         type: "",
         memberName: "",
         sex: "",
-        memberPhone: "",
+        phone: "",
         email: "",
         birthday: "",
         idCar: "",
         state: "",
-        mark: "",
+        mark:""
       },
       memberRules: {
         grade: [{ required: true, message: "请选择班级", trigger: "blur" }],
-        sId: [
+        studentName: [
           { required: true, message: "请输入学生姓名", trigger: "blur" },
         ],
         type: [{ required: true, message: "请输入成员类型", trigger: "blur" }],
@@ -308,10 +269,10 @@ export default {
       },
       //搜索，按钮
       search: {
-        sName: "",
-        classesId: "",
-        offset: "",
-        limit: "",
+        studentName: "",
+        grade: "",
+        offset:"",
+        limit:""
       },
 
       //新增修改信息所需数据
@@ -320,19 +281,11 @@ export default {
       typeList: [
         {
           value: 0,
-          label: "外公",
+          label: "父亲",
         },
         {
           value: 1,
-          label: "外婆",
-        },
-        {
-          value: 2,
-          label: "爷爷",
-        },
-        {
-          value: 3,
-          label: "奶奶",
+          label: "母亲",
         },
       ],
       sex: [
@@ -348,11 +301,11 @@ export default {
       state: [
         {
           value: 0,
-          label: "发布",
+          label: "下线",
         },
         {
           value: 1,
-          label: "下线",
+          label: "上线",
         },
       ],
     };
@@ -380,36 +333,29 @@ export default {
       console.log(`当前页: ${currentPage}`);
     },
 
-    getStudentInfo() {
-      req("getStudentList", { ...this.memberForm.grade }).then((data) => {
-        console.log(data.data);
-        this.studentList = data.data;
-      });
-    },
-
     //搜索
     searchData() {
-      this.search.offset = this.pageInfo.currentPage;
+      this.search.offset  = this.pageInfo.currentPage;
       this.search.limit = this.pageInfo.pageSize;
       req("selectData", {
         ...this.search,
       }).then((data) => {
         console.log(data.data);
-        this.tableData = data.data.list;
+        this.tableData = data.data;
         this.pageInfo.pageSize = data.data.pageSize;
         this.pageInfo.currentPage = data.data.currentPage;
         this.pageInfo.total = data.data.total;
       });
     },
     initAllList() {
-      req("getGradeList", {}).then((data) => {
+      req("getGradeList").then((data) => {
         console.log(data.data);
         this.gradeList = data.data;
       });
-      // req("getStudentList", {}).then((data) => {
-      //   console.log(data.data);
-      //   this.studentList = data.data;
-      // });
+      req("getStudentList").then((data) => {
+        console.log(data.data);
+        this.studentList = data.data;
+      });
     },
     //刷新页面
     fetch() {
@@ -432,7 +378,6 @@ export default {
     },
     memberEdit(row) {
       this.memberForm = row;
-      this.memberForm.sId = row.sid;
       this.dialogInfo.type = "editMember";
       this.dialogInfo.title = "修改成员信息";
       this.memberFormVisible = true;
@@ -447,7 +392,7 @@ export default {
               if (data.code === 1) {
                 this.$message.success(data.msg);
                 this.fetch();
-                this.$refs[this.memberForm].resetFields();
+                this.$refs.memberForm.resetFields();
                 this.memberFormVisible = false;
               } else {
                 this.$message.error(data.msg);
@@ -455,12 +400,12 @@ export default {
             });
           }
           if (this.dialogInfo.type === "editMember") {
-            req("updateData", { ...this.memberForm }).then((data) => {
+            req("updateData", { ...memberForm }).then((data) => {
               console.log(data.data);
               if (data.code === 1) {
                 this.$message.success(data.msg);
                 this.fetch();
-                this.$$refs[this.memberForm].resetFields();
+                this.memberForm.resetFields();
                 this.memberFormVisible = false;
               } else {
                 this.$message.error(data.msg);
@@ -502,9 +447,9 @@ export default {
       });
     },
   },
-  mounted() {
+  mounted(){
     this.fetch();
-  },
+  }
 };
 </script>
 <style lang="scss" scoped>

@@ -4,7 +4,7 @@
       <dl>
         <dd>
           <el-input
-            v-model="search.sName"
+            v-model="search.studentName"
             placeholder="学生名称"
             clearable
           ></el-input>
@@ -12,12 +12,12 @@
       </dl>
       <dl>
         <dd>
-          <el-select v-model="search.classesId" placeholder="班级">
+          <el-select v-model="search.grade" placeholder="班级">
             <el-option
               v-for="item in gradeList"
-              :key="item.classesId"
-              :label="item.classesName"
-              :value="item.classesId"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
             ></el-option>
           </el-select>
         </dd>
@@ -50,7 +50,7 @@
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column
         label="学生名称"
-        prop="sName"
+        prop="studentName"
         width="120"
       ></el-table-column>
       <el-table-column
@@ -60,13 +60,13 @@
       ></el-table-column>
       <el-table-column
         label="姓名"
-        prop="memberName"
+        prop="familyName"
         width="120"
       ></el-table-column>
       <el-table-column label="性别" prop="sex" width="120"></el-table-column>
       <el-table-column
         label="手机号"
-        prop="memberPhone"
+        prop="phone"
         width="120"
       ></el-table-column>
       <el-table-column
@@ -92,7 +92,7 @@
       ></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="memberEdit(scope.row)"
+          <el-button size="mini" @click="memberEdit(scope.row)"
             >成员编辑</el-button
           >
           <el-button size="mini" @click="memberDelete(scope.row)"
@@ -119,11 +119,11 @@
       <el-form :model="memberForm" :rules="memberRules" :ref="memberForm">
         <el-form-item
           label="班级名称"
-          prop="classesId"
+          prop="grade"
           :label-width="formLabelWidth"
         >
           <el-select
-            v-model="memberForm.classesId"
+            v-model="memberForm.grade"
             placeholder="班级名称"
             @change="getStudentInfo"
           >
@@ -140,7 +140,7 @@
           prop="sName"
           :label-width="formLabelWidth"
         >
-          <el-select v-model="memberForm.sId" placeholder="学生名称">
+          <el-select v-model="memberForm.sName" placeholder="学生名称">
             <el-option
               v-for="item in studentList"
               :key="item.sid"
@@ -266,9 +266,8 @@ export default {
         title: "",
       },
       memberForm: {
-        classesId: "",
-        sId: "",
-        sName:"",
+        grade: "",
+        sName: "",
         type: "",
         memberName: "",
         sex: "",
@@ -281,7 +280,7 @@ export default {
       },
       memberRules: {
         grade: [{ required: true, message: "请选择班级", trigger: "blur" }],
-        sId: [
+        studentName: [
           { required: true, message: "请输入学生姓名", trigger: "blur" },
         ],
         type: [{ required: true, message: "请输入成员类型", trigger: "blur" }],
@@ -308,8 +307,8 @@ export default {
       },
       //搜索，按钮
       search: {
-        sName: "",
-        classesId: "",
+        studentName: "",
+        grade: "",
         offset: "",
         limit: "",
       },
@@ -432,7 +431,6 @@ export default {
     },
     memberEdit(row) {
       this.memberForm = row;
-      this.memberForm.sId = row.sid;
       this.dialogInfo.type = "editMember";
       this.dialogInfo.title = "修改成员信息";
       this.memberFormVisible = true;
@@ -447,7 +445,7 @@ export default {
               if (data.code === 1) {
                 this.$message.success(data.msg);
                 this.fetch();
-                this.$refs[this.memberForm].resetFields();
+                this.$refs.memberForm.resetFields();
                 this.memberFormVisible = false;
               } else {
                 this.$message.error(data.msg);
@@ -455,12 +453,12 @@ export default {
             });
           }
           if (this.dialogInfo.type === "editMember") {
-            req("updateData", { ...this.memberForm }).then((data) => {
+            req("updateData", { ...memberForm }).then((data) => {
               console.log(data.data);
               if (data.code === 1) {
                 this.$message.success(data.msg);
                 this.fetch();
-                this.$$refs[this.memberForm].resetFields();
+                this.memberForm.resetFields();
                 this.memberFormVisible = false;
               } else {
                 this.$message.error(data.msg);

@@ -557,7 +557,7 @@ export default {
       },
       teacherFormVisible: false,
       teacherForm: {
-        teacherId: "",
+        id: "",
         tName: "",
         sex: "",
         tPhone: "",
@@ -671,11 +671,11 @@ export default {
     },
     modifyUser(row) {
       this.id = row.userId;
+      this.studentForm.sId = 
       console.log(this.id)
       if (row.identity === "student") {
         this.dialogInfo.type = "modifyStudent";
         this.dialogInfo.title = "修改";
-        this.studentForm.sId = this.id;
         req("getStudentInfoById", { id:this.id }).then((data) => {
           if (data.code === 1) {
             console.log(data.data);
@@ -702,7 +702,6 @@ export default {
       ) {
         this.dialogInfo.type = "modifyTeacher";
         this.dialogInfo.title = "修改";
-        this.teacherForm.teacherId = this.id;
         req("getTeacherInfoById", {id:this.id}).then((data) => {
           if (data.code === 1) {
             console.log(data.data);
@@ -782,7 +781,7 @@ export default {
         //     this.$message.error(data.msg);
         //   }
         // });
-        req("updateStudent", { ...this.studentForm}, {userId:this.sId}).then(
+        req("updateStudent", { ...this.studentForm, ...this.userForm }).then(
           (data) => {
             if (data.code === 1) {
               this.fetch();
@@ -810,7 +809,7 @@ export default {
         //     this.$message.error(data.msg);
         //   }
         // });
-        req("insertTeacher", { ...this.teacherForm,...this.userForm}).then(
+        req("insertTeacher", { ...this.teacherForm}).then(
           (data) => {
             if (data.code === 1) {
               this.fetch();
@@ -832,7 +831,7 @@ export default {
         //     this.$message.error(data.data.msg);
         //   }
         // });
-        req("updateTeacher", { ...this.teacherForm,teacherId:this.id}).then(
+        req("updateTeacher", { ...this.teacherForm}).then(
           (data) => {
             if (data.code === 1) {
               this.fetch();

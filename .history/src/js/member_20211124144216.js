@@ -15,16 +15,9 @@ const config = {
     deleteData:{
         url:'/family/deleteFamilyById',
         method:'post'
-    },
-
-    getGradeList:{
-        url:'/classes/queryAll',
-        method:'get'
-    },
-    getStudentList:{
-        url:'/student/queryAll',
-        method:'get'
     }
+
+    get
 }
 const request = function (funcName, requestParam) {
     return req(config[funcName].url, config[funcName].method, requestParam, {}, config[funcName].fileConfig)

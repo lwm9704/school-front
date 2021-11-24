@@ -782,7 +782,7 @@ export default {
         //     this.$message.error(data.msg);
         //   }
         // });
-        req("updateStudent", { ...this.studentForm}, {userId:this.sId}).then(
+        req("updateStudent", { ...this.studentForm, userId:this.sId }).then(
           (data) => {
             if (data.code === 1) {
               this.fetch();

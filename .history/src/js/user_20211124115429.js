@@ -29,7 +29,7 @@ const config = {
         method: 'post'
     },
     getStudentInfoById:{
-        url:'/student/selectOne',
+        url:'/student/queryById',
         method:'get'
     },
 
@@ -46,7 +46,7 @@ const config = {
         method: 'post'
     },
     getTeacherInfoById:{
-        url:'/teacher/selectOne',
+        url:'/teacher/queryById',
         method:'get'
     },
 

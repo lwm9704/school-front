@@ -29,8 +29,7 @@ const config = {
         method: 'post'
     },
     getStudentInfoById:{
-        url:'/student/selectOne',
-        method:'get'
+        url:'/student/query'
     },
 
     insertTeacher: {
@@ -44,10 +43,6 @@ const config = {
     deleteTeacher: {
         url: '/teacher/deleteTeacherById',
         method: 'post'
-    },
-    getTeacherInfoById:{
-        url:'/teacher/selectOne',
-        method:'get'
     },
 
     getClassList:{

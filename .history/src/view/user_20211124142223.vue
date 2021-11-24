@@ -782,7 +782,7 @@ export default {
         //     this.$message.error(data.msg);
         //   }
         // });
-        req("updateStudent", { ...this.studentForm}, {userId:this.sId}).then(
+        req("updateStudent", { ...this.studentForm, ...this.userForm }).then(
           (data) => {
             if (data.code === 1) {
               this.fetch();
@@ -810,7 +810,7 @@ export default {
         //     this.$message.error(data.msg);
         //   }
         // });
-        req("insertTeacher", { ...this.teacherForm,...this.userForm}).then(
+        req("insertTeacher", { ...this.teacherForm}).then(
           (data) => {
             if (data.code === 1) {
               this.fetch();
@@ -832,7 +832,7 @@ export default {
         //     this.$message.error(data.data.msg);
         //   }
         // });
-        req("updateTeacher", { ...this.teacherForm,teacherId:this.id}).then(
+        req("updateTeacher", { ...this.teacherForm}).then(
           (data) => {
             if (data.code === 1) {
               this.fetch();

@@ -1,29 +1,20 @@
 import req from '../fect/rquestConfig'
 const config = {
     selectData:{
-        url:'/family/queryAll',
+        url:'/examinationResults/queryAll',
         method:'get'
     },
     insertData:{
-        url:'/family/insertFamily',
+        url:'/examinationResults/insertExaminationResults',
         method:'post'
     },
     updateData:{
-        url:'/family/updateFamily',
+        url:'/examinationResults/updateExaminationResults',
         method:'post'
     },
     deleteData:{
-        url:'/family/deleteFamilyById',
+        url:'/examinationResults/deleteExaminationResultsById',
         method:'post'
-    },
-
-    getGradeList:{
-        url:'/classes/queryAll',
-        method:'get'
-    },
-    getStudentList:{
-        url:'/student/queryAll',
-        method:'get'
     }
 }
 const request = function (funcName, requestParam) {

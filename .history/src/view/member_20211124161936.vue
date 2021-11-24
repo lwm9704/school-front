@@ -4,7 +4,7 @@
       <dl>
         <dd>
           <el-input
-            v-model="search.sName"
+            v-model="search.studentName"
             placeholder="学生名称"
             clearable
           ></el-input>
@@ -12,7 +12,7 @@
       </dl>
       <dl>
         <dd>
-          <el-select v-model="search.classesId" placeholder="班级">
+          <el-select v-model="search.grade" placeholder="班级">
             <el-option
               v-for="item in gradeList"
               :key="item.classesId"
@@ -308,8 +308,8 @@ export default {
       },
       //搜索，按钮
       search: {
-        sName: "",
-        classesId: "",
+        studentName: "",
+        grade: "",
         offset: "",
         limit: "",
       },
