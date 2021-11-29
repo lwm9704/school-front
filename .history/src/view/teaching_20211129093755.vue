@@ -1,0 +1,503 @@
+<template>
+  <div>
+    <div class="main-head">
+      <dl>
+        <dd>
+          <el-input
+            v-model="search.courseName"
+            placeholder="课程名称"
+            clearable
+          ></el-input>
+        </dd>
+      </dl>
+      <dl>
+        <dd>
+          <el-select v-model="search.classesId" placeholder="班级">
+            <el-option
+              v-for="item in classesList"
+              :key="item.classesId"
+              :label="item.classesName"
+              :value="item.classesId"
+            ></el-option>
+          </el-select>
+        </dd>
+      </dl>
+      <dl>
+        <dd>
+          <el-button type="primary" @click="searchData">搜索</el-button>
+        </dd>
+      </dl>
+      <dl>
+        <dd>
+          <el-button type="primary" @click="addTeaching">新增</el-button>
+        </dd>
+      </dl>
+    </div>
+
+    <el-table
+      ref="multipleTable"
+      :data="tableData"
+      tooltip-effect="dark"
+      border
+      style="width: 100%"
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column type="selection" width="55"></el-table-column>
+      <el-table-column
+        label="班级名称"
+        prop="classesName"
+        width="120"
+      ></el-table-column>
+      <el-table-column
+        label="老师名称"
+        prop="teacherName"
+        width="120"
+      ></el-table-column>
+      <el-table-column
+        label="课程名称"
+        prop="courseName"
+        width="120"
+      ></el-table-column>
+      <el-table-column label="年份" prop="year" width="120"></el-table-column>
+      <el-table-column
+        label="学期"
+        prop="semester"
+        width="120"
+      ></el-table-column>
+      <el-table-column label="状态" prop="state" width="120"></el-table-column>
+      <el-table-column label="备注" prop="mark" width="120"></el-table-column>
+
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <el-button size="mini" @click="teachingDelete(scope.row)"
+            >删除</el-button
+          >
+          <el-button size="mini" type="primary" @click="teachingEdit(scope.row)"
+            >修改信息</el-button
+          >
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <div class="footer">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="parseInt(pageInfo.currentPage)"
+        :page-sizes="[100, 200, 300, 400]"
+        :page-size="parseInt(pageInfo.pageSize)"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="parseInt(pageInfo.total)"
+      ></el-pagination>
+    </div>
+
+    <!--添加或修改教学信息-->
+    <el-dialog :title="dialogInfo.title" :visible.sync="teachingFormVisible">
+      <el-form :model="teachingForm" :ref="teachingForm" :rules="teachingRules">
+        <el-form-item
+          label="班级名称"
+          prop="classesId"
+          :label-width="formLabelWidth"
+        >
+          <el-select
+            v-model="teachingForm.classesId"
+            clearable
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in classesList"
+              :key="item.classesId"
+              :label="item.classesName"
+              :value="item.classesId"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item
+          label="课程名称"
+          prop="courseId"
+          :label-width="formLabelWidth"
+        >
+          <el-select
+            v-model="teachingForm.courseId"
+            clearable
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in courseList"
+              :key="item.courseId"
+              :label="item.courseName"
+              :value="item.courseId"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item
+          label="老师名称"
+          prop="teacherId"
+          :label-width="formLabelWidth"
+        >
+          <el-select
+            v-model="teachingForm.teacherId"
+            clearable
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in teacherList"
+              :key="item.teacherId"
+              :label="item.tname"
+              :value="item.teacherId"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="年份" prop="year" :label-width="formLabelWidth">
+          <el-input v-model="teachingForm.year" autocomplete="off"></el-input>
+        </el-form-item>
+
+        <el-form-item
+          label="学期"
+          prop="semester"
+          :label-width="formLabelWidth"
+        >
+          <el-select
+            v-model="teachingForm.semester"
+            clearable
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in semesterList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="状态" prop="state" :label-width="formLabelWidth">
+          <el-select
+            v-model="teachingForm.state"
+            clearable
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in stateList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="备注" prop="mark" :label-width="formLabelWidth">
+          <el-input v-model="teachingForm.mark" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancelTeachingForm">取 消</el-button>
+        <el-button type="primary" @click="saveTeachingForm">确 定</el-button>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+<script>
+import req from "../js/teaching";
+export default {
+  data() {
+    return {
+      formLabelWidth: "120px",
+      //显示页面条数
+      pageInfo: {
+        currentPage: 1,
+        total: "",
+        pageSize: "",
+      },
+      //表内容数据
+      tableData: [],
+      multipleSelection: [],
+      dialogInfo: {
+        type: "",
+        title: "",
+      },
+      teachingFormVisible: false,
+      teachingForm: {
+        classesId: "",
+        courseId: "",
+        teacherId: "",
+        year: "",
+        semester: "",
+        state: "",
+        mark: "",
+      },
+      teachingRules: {
+        classesName: [
+          { required: true, message: "请选择班级", trigger: "blur" },
+        ],
+        courseName: [
+          { required: true, message: "请选择课程", trigger: "blur" },
+        ],
+        teacherName: [
+          { required: true, message: "请选择老师", trigger: "blur" },
+        ],
+        year: [{ required: true, message: "请输入年份", trigger: "blur" }],
+        semester: [{ required: true, message: "请选择学期", trigger: "blur" }],
+        state: [{ required: true, message: "请选择状态", trigger: "blur" }],
+      },
+      //搜索
+      search: {
+        courseName: "",
+        classesId: "",
+        offset: "",
+        limit: "",
+      },
+      classesList: [],
+      courseList: [],
+      teacherList: [],
+      semesterList: [
+        {
+          value: 1,
+          label: "第一个学期",
+        },
+        {
+          value: 2,
+          label: "第二个学期",
+        },
+      ],
+      stateList: [
+        {
+          value: 0,
+          label: "下线",
+        },
+        {
+          value: 1,
+          label: "发布",
+        },
+      ],
+    };
+  },
+  methods: {
+    //侧边栏的方法
+    handleOpen(key, keyPath) {
+      console.log(key, keyPath);
+    },
+    handleClose(key, keyPath) {
+      console.log(key, keyPath);
+    },
+
+    //表单多选框的方法
+    handleSelectionChange(row) {
+      this.multipleSelection = row;
+    },
+    //选页的相关方法
+    handleSizeChange(pageSize) {
+      this.pageInfo.pageSize = pageSize;
+      console.log(`每页 ${pageSize} 条`);
+    },
+    handleCurrentChange(currentPage) {
+      this.pageInfo.currentPage = currentPage;
+      console.log(`当前页: ${currentPage}`);
+    },
+
+    //搜索
+    searchData() {
+      this.search.offset = this.pageInfo.currentPage;
+      this.search.limit = this.pageInfo.pageSize;
+      req("selectData", {
+        ...this.search,
+      }).then((data) => {
+        console.log(data.data.list);
+        this.tableData = data.data.list;
+        this.pageInfo.pageSize = data.data.pageSize;
+        this.pageInfo.currentPage = data.data.currentPage;
+        this.pageInfo.total = data.data.total;
+        this.tableData.map(function (val) {
+          if (val.semester == 1) {
+            val.semester = "第一个学期";
+          }
+          if (val.semester == 2) {
+            val.semester = "第二个学期";
+          }
+          if (val.state == 1) {
+            val.state = "发布";
+          }
+          if (val.state == 0) {
+            val.state = "下线";
+          }
+        });
+      });
+    },
+
+    initAllList() {
+      req("getClassesList").then((data) => {
+        if (data.code === 1) {
+          this.classesList = data.data.list;
+        } else {
+          this.$message.error(data.msg);
+        }
+      });
+      req("getTeacherList",{state:0}).then((data) => {
+        if (data.code === 1) {
+          this.teacherList = data.data;
+          console.log(data.data);
+        } else {
+          this.$message.error(data.msg);
+        }
+      });
+      req("getCourseList",{state:1}).then((data) => {
+        if (data.code === 1) {
+          this.courseList = data.data.list;
+          console.log(data.data.list);
+        } else {
+          this.$message.error(data.msg);
+        }
+      });
+    },
+    //刷新页面
+    fetch() {
+      this.pageInfo.pageSize = 5;
+      this.pageInfo.pageIndex = 1;
+      this.searchData();
+      this.initAllList();
+    },
+    //重置
+    reset() {
+      this.fetch();
+      console.log("重置按钮被点击了");
+    },
+
+    //触发事件
+    addTeaching() {
+      this.dialogInfo.type = "addTeaching";
+      this.dialogInfo.title = "新增教学信息";
+      this.teachingFormVisible = true;
+    },
+    teachingEdit(row) {
+      this.teachingForm = row;
+      this.teachingForm.classesId = row.classesId;
+      this.teachingForm.courseId = row.courseId;
+      this.teachingForm.teacherId = row.teacherId;
+      if (this.teachingForm.semester === "第一个学期") {
+        this.teachingForm.semester = 1;
+      }
+      if (this.teachingForm.semester === "第二个学期") {
+        this.teachingForm.semester = 2;
+      }
+      if (this.teachingForm.state === "发布") {
+        this.teachingForm.state = 1;
+      }
+      if (this.teachingForm.state === "下线") {
+        this.teachingForm.state = 0;
+      }
+      this.dialogInfo.type = "teachingEdit";
+      this.dialogInfo.title = "修改教学信息";
+      this.teachingFormVisible = true;
+    },
+
+    saveTeachingForm() {
+      this.$refs[this.teachingForm].validate((valid) => {
+        if (valid) {
+          if (this.dialogInfo.type === "addTeaching") {
+            req("insertData", { ...this.teachingForm }).then((data) => {
+              console.log(data.data);
+              if (data.code === 1) {
+                this.$message.success(data.msg);
+                this.fetch();
+                this.$refs[this.teachingForm].resetFields();
+                this.teachingFormVisible = false;
+              } else {
+                this.$message.error(data.msg);
+              }
+            });
+          }
+          if (this.dialogInfo.type === "teachingEdit") {
+            req("updateData", { ...this.teachingForm }).then((data) => {
+              console.log(data.data);
+              if (data.code === 1) {
+                this.$message.success(data.msg);
+                this.fetch();
+                this.$refs[this.teachingForm].resetFields();
+                this.teachingFormVisible = false;
+              } else {
+                this.$message.error(data.msg);
+              }
+            });
+          }
+        }
+      });
+    },
+    cancelTeachingForm() {
+      this.$refs[this.teachingForm].resetFields();
+      this.teachingFormVisible = false;
+    },
+
+    deleteTeaching(row) {
+      this.$confirm("此操作将永久删除该文件,是否继续?").then(() => {
+        let teachingId = row.teachingId.toString();
+        req("deleteData", { teachingId: teachingId }).then((data) => {
+          this.$message.success(data.msg);
+          this.fetch();
+        });
+      });
+    },
+    deleteTeachingList() {
+      if (this.multipleSelection.length === 0) {
+        this.$message.info("请选择需要删除的数据");
+        return;
+      }
+      this.$confirm("此操作将永久删除该文件,是否继续?").then(() => {
+        let teachingIdList = this.multipleSelection
+          .map((item) => {
+            return item.teachingId;
+          })
+          .toString();
+        req("deleteData", { teachingId: teachingIdList }).then((data) => {
+          this.$message.success(data.msg);
+          this.fetch();
+        });
+      });
+    },
+  },
+  mounted() {
+    this.fetch();
+    this.initAllList();
+  },
+};
+</script>
+<style lang="scss" scoped>
+.el-header,
+.el-footer {
+  background-color: #b3c0d1;
+  color: #333;
+  text-align: center;
+  line-height: 60px;
+}
+
+.el-aside {
+  background-color: #d3dce6;
+  color: #333;
+  text-align: center;
+  line-height: 200px;
+}
+
+.el-main {
+  background-color: #e9eef3;
+  color: #333;
+  text-align: center;
+  line-height: 160px;
+}
+
+body > .el-container {
+  margin-bottom: 40px;
+}
+.main-head {
+  display: flex;
+  flex-direction: row;
+}
+.footer {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translate(-50%, -100%);
+  align-content: center;
+}
+</style>
